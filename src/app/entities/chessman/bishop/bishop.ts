@@ -4,18 +4,11 @@ import { Position } from "../../board/board.i";
 import { Chessman } from "../chessman";
 
 export class Bishop extends Chessman {
-  constructor(
-    imageUrl: string = "",
-    side: boolean = false,
-    code: string = "b"
-  ) {
+  constructor(imageUrl: string = "", side: boolean = false, code: string = "b") {
     super(imageUrl, side, code);
   }
 
-  move(
-    boardData: Record<string, Position>,
-    currentPosition: string
-  ): Array<string> {
+  move(boardData: Record<string, Position>, currentPosition: string): Array<string> {
     const moveContainer: Array<string> = [];
     const code = currentPosition.split("");
     const indexRow = Number(code[1]);
@@ -24,29 +17,41 @@ export class Bishop extends Chessman {
     // upper right
     for (let i = indexRow + 1, j = 1; i <= Board.MAX_ROW; i++, j++) {
       const code = getCode(indexColumn + j, i);
-      if (!boardData[code] || boardData[code].object) break;
-      moveContainer.push(code);
+      const check = Board.checkMove(boardData, code, this.getSide());
+      if (check.isMoveAble) {
+        moveContainer.push(code);
+        if (check.isEnemy) break;
+      } else break;
     }
 
     // upper left
     for (let i = indexRow + 1, j = 1; i <= Board.MAX_ROW; i++, j++) {
       const code = getCode(indexColumn - j, i);
-      if (!boardData[code] || boardData[code].object) break;
-      moveContainer.push(code);
+      const check = Board.checkMove(boardData, code, this.getSide());
+      if (check.isMoveAble) {
+        moveContainer.push(code);
+        if (check.isEnemy) break;
+      } else break;
     }
 
     // bottom right
     for (let i = indexRow - 1, j = 1; i >= Board.MIN_ROW; i--, j++) {
       const code = getCode(indexColumn + j, i);
-      if (!boardData[code] || boardData[code].object) break;
-      moveContainer.push(code);
+      const check = Board.checkMove(boardData, code, this.getSide());
+      if (check.isMoveAble) {
+        moveContainer.push(code);
+        if (check.isEnemy) break;
+      } else break;
     }
 
     // bottom left
     for (let i = indexRow - 1, j = 1; i >= Board.MIN_ROW; i--, j++) {
       const code = getCode(indexColumn - j, i);
-      if (!boardData[code] || boardData[code].object) break;
-      moveContainer.push(code);
+      const check = Board.checkMove(boardData, code, this.getSide());
+      if (check.isMoveAble) {
+        moveContainer.push(code);
+        if (check.isEnemy) break;
+      } else break;
     }
 
     return moveContainer;

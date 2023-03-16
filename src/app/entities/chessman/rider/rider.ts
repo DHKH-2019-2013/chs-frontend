@@ -4,18 +4,11 @@ import { Position } from "../../board/board.i";
 import { Chessman } from "../chessman";
 
 export class Rider extends Chessman {
-  constructor(
-    imageUrl: string = "",
-    side: boolean = false,
-    code: string = "r"
-  ) {
+  constructor(imageUrl: string = "", side: boolean = false, code: string = "r") {
     super(imageUrl, side, code);
   }
 
-  move(
-    boardData: Record<string, Position>,
-    currentPosition: string
-  ): Array<string> {
+  move(boardData: Record<string, Position>, currentPosition: string): Array<string> {
     const moveContainer: Array<string> = [];
     const code = currentPosition.split("");
     const indexRow = Number(code[1]);
@@ -24,29 +17,41 @@ export class Rider extends Chessman {
     // up
     for (let i = indexRow + 1; i <= Board.MAX_ROW; i++) {
       const code = getCode(indexColumn, i);
-      if (!boardData[code] || boardData[code].object) break;
-      moveContainer.push(code);
+      const check = Board.checkMove(boardData, code, this.getSide());
+      if (check.isMoveAble) {
+        moveContainer.push(code);
+        if (check.isEnemy) break;
+      } else break;
     }
 
     // down
     for (let i = indexRow - 1; i >= Board.MAX_ROW; i--) {
       const code = getCode(indexColumn, i);
-      if (!boardData[code] || boardData[code].object) break;
-      moveContainer.push(code);
+      const check = Board.checkMove(boardData, code, this.getSide());
+      if (check.isMoveAble) {
+        moveContainer.push(code);
+        if (check.isEnemy) break;
+      } else break;
     }
 
     // right
     for (let i = indexColumn + 1; i <= Board.MAX_COLUMN_IN_CHAR; i++) {
       const code = getCode(i, indexRow);
-      if (!boardData[code] || boardData[code].object) break;
-      moveContainer.push(code);
+      const check = Board.checkMove(boardData, code, this.getSide());
+      if (check.isMoveAble) {
+        moveContainer.push(code);
+        if (check.isEnemy) break;
+      } else break;
     }
 
     // left
     for (let i = indexColumn - 1; i >= Board.MIN_COLUMN_IN_CHAR; i--) {
       const code = getCode(i, indexRow);
-      if (!boardData[code] || boardData[code].object) break;
-      moveContainer.push(code);
+      const check = Board.checkMove(boardData, code, this.getSide());
+      if (check.isMoveAble) {
+        moveContainer.push(code);
+        if (check.isEnemy) break;
+      } else break;
     }
 
     return moveContainer;

@@ -13,18 +13,34 @@ export class Board {
   static readonly MIN_COLUMN_IN_CHAR: number = 97;
   static readonly MAX_COLUMN_IN_CHAR: number = 104;
 
+  static checkMove(
+    boardData: Record<string, Position>,
+    position: string,
+    currentSide: boolean
+  ): {
+    isMoveAble: boolean;
+    isEnemy: boolean;
+  } {
+    let isMoveAble = false;
+    let isEnemy = false;
+    if (boardData[position]) {
+      if (!boardData[position].object) isMoveAble = true;
+      else if (boardData[position].object.get().side !== currentSide) {
+        isMoveAble = true;
+        isEnemy = true;
+      }
+    }
+
+    return { isEnemy, isMoveAble };
+  }
+
   private fen: string = "";
   private turn: boolean = false;
   private side: boolean = false;
   private url: string = "";
   private data: Record<string, Position> = {}; //hashMap
 
-  constructor(
-    fen: string = "",
-    turn: boolean = false,
-    side: boolean = false,
-    url: string = ""
-  ) {
+  constructor(fen: string = "", turn: boolean = false, side: boolean = false, url: string = "") {
     this.setFen(fen);
     this.setTurn(turn);
     this.setSide(side);
