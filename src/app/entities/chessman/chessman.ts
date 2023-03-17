@@ -20,11 +20,7 @@ export class Chessman {
     };
   }
 
-  public move(
-    boardData: Record<string, Position>,
-    currentPosition: string
-  ): Array<string> {
-    console.log("A chessman is moving");
+  public move(boardData: Record<string, Position>, currentPosition: string): Array<string> {
     return [];
   }
 

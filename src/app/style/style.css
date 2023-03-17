@@ -27,5 +27,21 @@ li {
 }
 
 #board-container {
-  width: 500px;
+  width: -moz-max-content;
+  width: max-content;
+  position: relative;
+  display: block;
+  transform: scale(0.6, 0.6) translate(-34%, -34%);
+}
+
+img.chessman {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  position: absolute;
+}
+
+.chessman:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }/*# sourceMappingURL=style.css.map */

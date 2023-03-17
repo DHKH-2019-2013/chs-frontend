@@ -3,7 +3,7 @@ import { getCode } from "../../utils/utils";
 import { BoardInfo, Position } from "./board.i";
 
 export class Board {
-  static readonly WIDTH: number = 50;
+  static readonly WIDTH: number = 150;
   static readonly MIN_ROW: number = 1;
   static readonly MAX_ROW: number = 8;
 
@@ -51,11 +51,20 @@ export class Board {
 
   public get(): BoardInfo {
     return {
-      data: this.getFen(),
+      fen: this.getFen(),
       turn: this.getTurn(),
       side: this.getSide(),
     };
   }
+
+  public showAvailableChessmanMove(movePointContainer: Array<string>) {
+    for (const movePoint of movePointContainer) {
+      this.data[movePoint].hasMovePoint = true;
+      console.log(this.data[movePoint]);
+    }
+  }
+
+  public updateChessmanOnBoard() {}
 
   public getWidth(): number {
     return Board.WIDTH;
@@ -119,6 +128,7 @@ export class Board {
         this.data[getCode(j, i)] = {
           x: currentColumn * Board.WIDTH,
           y: currentRow * Board.WIDTH,
+          hasMovePoint: false,
         };
       }
     }

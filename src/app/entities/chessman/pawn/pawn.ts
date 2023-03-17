@@ -19,7 +19,14 @@ export class Pawn extends Chessman {
     // top
     _code = getCode(indexColumn, indexRow + 1);
     _check = Board.checkMove(boardData, _code, this.getSide());
-    if (_check.isMoveAble && !_check.isEnemy) moveContainer.push(_code);
+    if (_check.isMoveAble && !_check.isEnemy) {
+      moveContainer.push(_code);
+
+      // top
+      _code = getCode(indexColumn, indexRow + 2);
+      _check = Board.checkMove(boardData, _code, this.getSide());
+      if (_check.isMoveAble && !_check.isEnemy) moveContainer.push(_code);
+    }
 
     // top right
     _code = getCode(indexColumn + 1, indexRow + 1);

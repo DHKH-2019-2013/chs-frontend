@@ -1,0 +1,13 @@
+img.chessman {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  position: absolute;
+}
+
+.chessman {
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+}

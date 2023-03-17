@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import Board from "./board/board.component";
+import React from "react";
+import BoardComponent from "./board/board.component";
 
 export default function App() {
   return (
     <>
-      <Board />
+      <BoardComponent />
     </>
   );
 }
