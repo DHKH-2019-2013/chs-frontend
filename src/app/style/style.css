@@ -44,4 +44,10 @@ img.chessman {
 .chessman:hover {
   background-color: rgba(0, 0, 0, 0.1);
   cursor: pointer;
+}
+.chessman.pointing {
+  border: 8px solid rgba(255, 255, 255, 0.5);
+}
+.chessman.selected {
+  background-color: rgba(255, 255, 0, 0.8);
 }/*# sourceMappingURL=style.css.map */

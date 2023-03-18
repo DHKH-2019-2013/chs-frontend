@@ -1,5 +1,6 @@
 import { INITIALIZE_POSITION } from "../../constant/constant";
 import { getCode } from "../../utils/utils";
+import { Chessman } from "../chessman/chessman";
 import { BoardInfo, Position } from "./board.i";
 
 export class Board {
@@ -129,6 +130,7 @@ export class Board {
           x: currentColumn * Board.WIDTH,
           y: currentRow * Board.WIDTH,
           hasMovePoint: false,
+          object: new Chessman("assets/empty.png"),
         };
       }
     }

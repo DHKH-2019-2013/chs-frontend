@@ -1,35 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { Board } from "../../entities/board/board";
+import { Chessman } from "../../entities/chessman/chessman";
 import { ChessmanComponent } from "../chessman/chessman.component";
-const board = new Board().getData(); // fix shit
-export default function BoardComponent() {
+import { BoardProps } from "./board.component.i";
+
+export default function BoardComponent({ board }: BoardProps) {
   const [change, setChange] = useState(false);
-  
 
-  useEffect(() => {
-    console.log("HELLO");
-  }, [change])
+  useEffect(() => {}, [change]);
 
-  function handleDragEnd(event: any, currentPos: string) {
-    const nextPos = document.elementFromPoint(event.clientX, event.clientY).id;
-    board[nextPos].object = board[currentPos].object;
-    board[currentPos].object = undefined;
-    console.log(nextPos, board[nextPos]);
-    console.log(currentPos, board[currentPos]);
+  function moveChessman(event: any, currentPos: string) {
+    try {
+      // get next chessman position
+      const nextPos = document.elementFromPoint(event.clientX, event.clientY).id;
 
-    setChange(!change)
+      // check if next position is same with previous
+      if (nextPos === currentPos) throw new Error("samePosition");
+
+      // update chessman position by swapping
+      const temp = board[nextPos].object;
+      board[nextPos].object = board[currentPos].object;
+      board[currentPos].object = temp;
+
+      // trigger board re-render
+      setChange(!change);
+    } catch (e) {
+      // do nothing
+    }
   }
 
   return (
     <>
       <div id="board-container">
         <img id="board" src="assets/board.png" alt="chess-board" />
-        {
-          Object.keys(board).map(key => {
-            if (key === "a3") console.log(board[key]);
-            return <ChessmanComponent key={key} data={board[key]} currentPos={key} handleDragEnd={handleDragEnd}/>
-          })
-        }
+        {Object.keys(board).map((key) => {
+          return <ChessmanComponent key={key} data={board[key]} currentPos={key} moveChessman={moveChessman} />;
+        })}
       </div>
     </>
   );
