@@ -6,21 +6,16 @@ export function ChessmanComponent({
   currentPos,
   moveChessman,
   hightlightSelectedCell,
-  unHightlightSelectedCellWhenDrop,
+  unHightlightSelectedCell,
+  unHightlightMovePoint,
 }: ChessmanProps) {
-  function getMove() {
-    // const board = new Board().getData();
-    // const moveContainer = board[currentPos]?.object?.move(board, currentPos);
-    return;
-  }
-
   function disableNotAllowedMouseCursor(event: any) {
     event.preventDefault();
   }
 
   function hideCurrentChessmanWhenClick(event: any) {
+    unHightlightSelectedCell();
     hightlightSelectedCell(event);
-    if (event.target.src.includes("empty")) event.preventDefault();
   }
 
   function hightlightPointer(event: any) {
@@ -28,12 +23,16 @@ export function ChessmanComponent({
   }
 
   function unHightlightPointer(event: any) {
-    if (event.type === "drop") unHightlightSelectedCellWhenDrop();
+    if (event.type === "drop") {
+      unHightlightSelectedCell();
+      unHightlightMovePoint();
+    }
     event.target.classList.remove("pointing");
   }
 
   return (
     <div className="chessman-container" style={{ top: data?.y, left: data?.x }}>
+      <span className="move-point"></span>
       <img
         id={currentPos}
         className="chessman"

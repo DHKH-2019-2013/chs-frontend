@@ -32,18 +32,46 @@ export default function BoardComponent({ board }: BoardProps) {
     }
   }
 
+  function getChessmanMove(currentPos: string) {
+    return board[currentPos]?.object?.move(board, currentPos);
+  }
+
   function hightlightSelectedCell(event: any) {
     if (event.target.src.includes("empty")) {
       event.preventDefault();
       return;
     }
 
-    if (event.type === "click") event.target.classList.toggle("selected");
+    if (event.type === "click") {
+      if (document.querySelector(".selected")?.id !== event.target.id) unHightlightSelectedCell();
+      event.target.classList.toggle("selected");
+    }
     if (event.type === "dragstart") event.target.classList.add("selected");
+
+    displayChessmanMovePoint(event);
   }
 
-  function unHightlightSelectedCellWhenDrop() {
+  function displayChessmanMovePoint(event: any) {
+    // remove previous move point
+    unHightlightMovePoint();
+
+    // set new move point
+    if (event.target.classList.contains("selected")) {
+      const movePointContainer = getChessmanMove(event.target.id);
+      for (const point of movePointContainer) {
+        document.getElementById(point).parentNode.querySelector(".move-point").classList.add("active");
+      }
+    }
+  }
+
+  function unHightlightSelectedCell() {
     document.querySelector(".selected")?.classList.remove("selected");
+  }
+
+  function unHightlightMovePoint() {
+    document.querySelectorAll(".active").forEach((elem) => {
+      elem.classList.remove("active");
+    });
   }
 
   return (
@@ -58,7 +86,8 @@ export default function BoardComponent({ board }: BoardProps) {
               currentPos={key}
               moveChessman={moveChessman}
               hightlightSelectedCell={hightlightSelectedCell}
-              unHightlightSelectedCellWhenDrop={unHightlightSelectedCellWhenDrop}
+              unHightlightSelectedCell={unHightlightSelectedCell}
+              unHightlightMovePoint={unHightlightMovePoint}
             />
           );
         })}

@@ -1,5 +1,6 @@
 div.chessman-container {
   position: absolute;
+  width: fit-content;
   img {
     &.chessman {
       display: inline-block;
@@ -12,12 +13,25 @@ div.chessman-container {
       }
     
       &.pointing {
-        border: 8px solid rgba(255, 255, 255, 0.5);
+        border: 10px solid rgba(255, 255, 255, 0.5);
       }
     
       &.selected {
         background-color: rgba(255, 255, 0, 0.5);
       }
     }
+  }
+
+  & .move-point.active {
+    display: inline-block;
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+    transform: translate(50%, 50%) scale(0.6, 0.6);
+    background-color: rgba(0, 0, 0, 0.2);
+    pointer-events:none;
   }
 }

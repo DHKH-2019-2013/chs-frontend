@@ -5,5 +5,6 @@ export interface ChessmanProps {
   currentPos: string;
   moveChessman: Function;
   hightlightSelectedCell: Function;
-  unHightlightSelectedCellWhenDrop: Function;
+  unHightlightSelectedCell: Function;
+  unHightlightMovePoint: Function;
 }
