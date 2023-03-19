@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { ChessmanProps } from "./chessman.component.i";
 
-export function ChessmanComponent({ data, currentPos, moveChessman }: ChessmanProps) {
-  const [isSelected, setSelected] = useState(true);
-
+export function ChessmanComponent({
+  data,
+  currentPos,
+  moveChessman,
+  hightlightSelectedCell,
+  unHightlightSelectedCellWhenDrop,
+}: ChessmanProps) {
   function getMove() {
     // const board = new Board().getData();
     // const moveContainer = board[currentPos]?.object?.move(board, currentPos);
@@ -15,6 +19,7 @@ export function ChessmanComponent({ data, currentPos, moveChessman }: ChessmanPr
   }
 
   function hideCurrentChessmanWhenClick(event: any) {
+    hightlightSelectedCell(event);
     if (event.target.src.includes("empty")) event.preventDefault();
   }
 
@@ -23,21 +28,15 @@ export function ChessmanComponent({ data, currentPos, moveChessman }: ChessmanPr
   }
 
   function unHightlightPointer(event: any) {
+    if (event.type === "drop") unHightlightSelectedCellWhenDrop();
     event.target.classList.remove("pointing");
   }
 
-  function hightLightSelectedChessman(event: any) {
-    setSelected(!isSelected);
-    if (isSelected) event.target.classList.add("selected");
-    else event.target.classList.remove("selected");
-  }
-
   return (
-    <>
+    <div className="chessman-container" style={{ top: data?.y, left: data?.x }}>
       <img
         id={currentPos}
         className="chessman"
-        style={{ top: data?.y, left: data?.x }}
         src={data?.object?.get().imageUrl}
         onDragStart={hideCurrentChessmanWhenClick}
         onDragEnd={(e) => moveChessman(e, currentPos)}
@@ -45,7 +44,8 @@ export function ChessmanComponent({ data, currentPos, moveChessman }: ChessmanPr
         onDragLeave={unHightlightPointer}
         onDrop={unHightlightPointer}
         onDragOver={disableNotAllowedMouseCursor}
+        onClick={(event) => hightlightSelectedCell(event)}
       ></img>
-    </>
+    </div>
   );
 }

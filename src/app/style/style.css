@@ -34,20 +34,21 @@ li {
   transform: scale(0.6, 0.6) translate(-34%, -34%);
 }
 
-img.chessman {
+div.chessman-container {
+  position: absolute;
+}
+div.chessman-container img.chessman {
   display: inline-block;
   width: 150px;
   height: 150px;
-  position: absolute;
 }
-
-.chessman:hover {
+div.chessman-container img.chessman:hover {
   background-color: rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
-.chessman.pointing {
+div.chessman-container img.chessman.pointing {
   border: 8px solid rgba(255, 255, 255, 0.5);
 }
-.chessman.selected {
-  background-color: rgba(255, 255, 0, 0.8);
+div.chessman-container img.chessman.selected {
+  background-color: rgba(255, 255, 0, 0.5);
 }/*# sourceMappingURL=style.css.map */
