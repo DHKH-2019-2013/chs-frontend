@@ -4,7 +4,7 @@ import { ChessmanProps } from "./chessman.component.i";
 export function ChessmanComponent({
   data,
   currentPos,
-  moveChessman,
+  moveChessmanByPlayer,
   hightlightSelectedCell,
   unHightlightSelectedCell,
   unHightlightMovePoint,
@@ -38,7 +38,7 @@ export function ChessmanComponent({
         className="chessman"
         src={data?.object?.get().imageUrl}
         onDragStart={hideCurrentChessmanWhenClick}
-        onDragEnd={(e) => moveChessman(e, currentPos)}
+        onDragEnd={(e) => moveChessmanByPlayer(e, currentPos)}
         onDragEnter={hightlightPointer}
         onDragLeave={unHightlightPointer}
         onDrop={unHightlightPointer}

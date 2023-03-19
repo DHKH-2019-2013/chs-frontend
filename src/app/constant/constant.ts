@@ -41,3 +41,5 @@ export const INITIALIZE_POSITION: Record<string, any> = {
   g2: new Pawn("assets/P.png", true),
   h2: new Pawn("assets/P.png", true),
 };
+
+export const INTELIGENCE = 15;
