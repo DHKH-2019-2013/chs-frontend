@@ -16,25 +16,30 @@ export class Pawn extends Chessman {
 
     let _code = "";
     let _check = {} as any;
-    // top
-    _code = getCode(indexColumn, indexRow + 1);
+
+    const side = boardData[currentPosition].object.get().side;
+    const expression = side ? 1 : -1;
+    // top, bottom
+    _code = getCode(indexColumn, indexRow + 1 * expression);
     _check = Board.checkMove(boardData, _code, this.getSide());
     if (_check.isMoveAble && !_check.isEnemy) {
       moveContainer.push(_code);
 
-      // top
-      _code = getCode(indexColumn, indexRow + 2);
-      _check = Board.checkMove(boardData, _code, this.getSide());
-      if (_check.isMoveAble && !_check.isEnemy) moveContainer.push(_code);
+      // top, bottom
+      if ((side && indexRow === 2) || (!side && indexRow === 7)) {
+        _code = getCode(indexColumn, indexRow + 2 * expression);
+        _check = Board.checkMove(boardData, _code, this.getSide());
+        if (_check.isMoveAble && !_check.isEnemy) moveContainer.push(_code);
+      }
     }
 
     // top right
-    _code = getCode(indexColumn + 1, indexRow + 1);
+    _code = getCode(indexColumn + 1, indexRow + 1 * expression);
     _check = Board.checkMove(boardData, _code, this.getSide());
     if (_check.isMoveAble && _check.isEnemy) moveContainer.push(_code);
 
     // top left
-    _code = getCode(indexColumn - 1, indexRow + 1);
+    _code = getCode(indexColumn - 1, indexRow + 1 * expression);
     _check = Board.checkMove(boardData, _code, this.getSide());
     if (_check.isMoveAble && _check.isEnemy) moveContainer.push(_code);
 
