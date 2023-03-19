@@ -6,7 +6,7 @@ export class Chessman {
   private side: boolean = false;
   private code: string = "";
 
-  constructor(imageUrl: string = "", side: boolean = false, code: string = "") {
+  constructor(imageUrl: string = "", side: boolean = undefined, code: string = "") {
     this.setImageUrl(imageUrl);
     this.setSide(side);
     this.setCode(code);

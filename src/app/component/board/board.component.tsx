@@ -14,7 +14,7 @@ export default function BoardComponent({ board }: BoardProps) {
 
     // update chessman position by swapping
     board[nextPos].object = board[currentPos].object;
-    board[currentPos].object = new Chessman("assets/empty.png");
+    board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
   }
 
   function moveChessman(event: any, currentPos: string) {
@@ -58,6 +58,7 @@ export default function BoardComponent({ board }: BoardProps) {
     // set new move point
     if (event.target.classList.contains("selected")) {
       const movePointContainer = getChessmanMove(event.target.id);
+      console.log(movePointContainer);
       for (const point of movePointContainer) {
         document.getElementById(point).parentNode.querySelector(".move-point").classList.add("active");
       }

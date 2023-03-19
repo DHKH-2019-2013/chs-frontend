@@ -25,7 +25,7 @@ export class Board {
     let isMoveAble = false;
     let isEnemy = false;
     if (boardData[position]) {
-      if (!boardData[position].object) isMoveAble = true;
+      if (boardData[position].object.get().imageUrl.includes("empty")) isMoveAble = true;
       else if (boardData[position].object.get().side !== currentSide) {
         isMoveAble = true;
         isEnemy = true;
@@ -130,7 +130,7 @@ export class Board {
           x: currentColumn * Board.WIDTH,
           y: currentRow * Board.WIDTH,
           hasMovePoint: false,
-          object: new Chessman("assets/empty.png"),
+          object: new Chessman("assets/empty.png", undefined, undefined),
         };
       }
     }
