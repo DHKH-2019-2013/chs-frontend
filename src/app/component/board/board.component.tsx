@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { GetInitializeChessBoardResponse } from "../../config/http-rest-client-config/http-rest-client-config.i";
+import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
 import { Chessman } from "../../entities/chessman/chessman";
 import { ChessmanComponent } from "../chessman/chessman.component";
 import { BoardProps } from "./board.component.i";
 
-export default function BoardComponent({ board }: BoardProps) {
+export default function BoardComponent({ board, updateBoardFen }: BoardProps) {
   const [change, setChange] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const response: GetInitializeChessBoardResponse = await HttpRestClientConfig.getInitializeChessBoard();
+      updateBoardFen(response.fen);
+    })();
+  });
 
   useEffect(() => {}, [change]);
 
