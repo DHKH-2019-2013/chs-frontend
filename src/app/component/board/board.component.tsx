@@ -4,7 +4,7 @@ import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-
 import { INTELIGENCE } from "../../constant/constant";
 import { Chessman } from "../../entities/chessman/chessman";
 import { ChessmanComponent } from "../chessman/chessman.component";
-import { BoardProps } from "./board.component.i";
+import { BoardProps, CastlingResult } from "./board.component.i";
 
 export default function BoardComponent({ board, getBoardFen, setBoardFen }: BoardProps) {
   const [change, setChange] = useState(false);
@@ -26,6 +26,38 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
     board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
   }
 
+  function handleBotCastling(currentPos: string, nextPos: string): CastlingResult {
+    if (["K", "k"].includes(board[currentPos].object.get().code)) {
+      if (currentPos === "e8" && nextPos === "g8") {
+        return {
+          isCastling: true,
+          king: {
+            currentPos: "e8",
+            nextPos: "g8",
+          },
+          rider: {
+            currentPos: "h8",
+            nextPos: "f8",
+          },
+        };
+      } else if (currentPos === "e8" && nextPos === "c8") {
+        return {
+          isCastling: true,
+          king: {
+            currentPos: "e8",
+            nextPos: "c8",
+          },
+          rider: {
+            currentPos: "a8",
+            nextPos: "d8",
+          },
+        };
+      }
+    }
+
+    return { isCastling: false };
+  }
+
   async function moveChessmanByBot(playerMove: string) {
     const params: GetMoveParams = {
       fen: getBoardFen(),
@@ -38,7 +70,12 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
     const currentPos = response.move.slice(0, 2);
     const nextPos = response.move.slice(2, 4);
 
-    updateBoardChessman(currentPos, nextPos);
+    // handle castle
+    const _result: CastlingResult = handleBotCastling(currentPos, nextPos);
+    if (_result.isCastling) {
+      updateBoardChessman(_result.king.currentPos, _result.king.nextPos);
+      updateBoardChessman(_result.rider.currentPos, _result.rider.nextPos);
+    } else updateBoardChessman(currentPos, nextPos);
 
     // final
     // trigger board re-render

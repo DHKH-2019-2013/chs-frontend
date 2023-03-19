@@ -5,3 +5,15 @@ export interface BoardProps {
   getBoardFen: Function;
   setBoardFen: Function;
 }
+
+export interface CastlingResult {
+  isCastling: boolean;
+  king?: {
+    currentPos: string;
+    nextPos: string;
+  };
+  rider?: {
+    currentPos: string;
+    nextPos: string;
+  };
+}
