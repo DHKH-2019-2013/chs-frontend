@@ -14,7 +14,7 @@ export function ChessmanComponent({
   }
 
   function hideCurrentChessmanWhenClick(event: any) {
-    unHightlightSelectedCell();
+    if (!event.target.src.includes("empty")) unHightlightSelectedCell();
     hightlightSelectedCell(event);
   }
 
