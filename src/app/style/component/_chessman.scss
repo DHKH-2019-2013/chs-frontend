@@ -34,4 +34,16 @@ div.chessman-container {
     background-color: rgba(0, 0, 0, 0.2);
     pointer-events:none;
   }
+
+  & .move-point.active-enemy {
+    display: inline-block;
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+    border: 10px solid rgba(0, 0, 0, 0.1);
+    pointer-events:none;
+  }
 }

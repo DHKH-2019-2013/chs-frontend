@@ -58,8 +58,14 @@ export default function BoardComponent({ board }: BoardProps) {
     // set new move point
     if (event.target.classList.contains("selected")) {
       const movePointContainer = getChessmanMove(event.target.id);
-      console.log(movePointContainer);
       for (const point of movePointContainer) {
+        if (
+          typeof board[point].object.get().side === "boolean" &&
+          board[point].object.get().side !== board[event.target.id].object.get().side
+        ) {
+          document.getElementById(point).parentNode.querySelector(".move-point").classList.add("active-enemy");
+          continue;
+        }
         document.getElementById(point).parentNode.querySelector(".move-point").classList.add("active");
       }
     }
@@ -70,8 +76,8 @@ export default function BoardComponent({ board }: BoardProps) {
   }
 
   function unHightlightMovePoint() {
-    document.querySelectorAll(".active").forEach((elem) => {
-      elem.classList.remove("active");
+    document.querySelectorAll(".active, .active-enemy").forEach((elem) => {
+      elem.classList.remove("active", "active-enemy");
     });
   }
 

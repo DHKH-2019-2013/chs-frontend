@@ -61,7 +61,6 @@ export class Board {
   public showAvailableChessmanMove(movePointContainer: Array<string>) {
     for (const movePoint of movePointContainer) {
       this.data[movePoint].hasMovePoint = true;
-      console.log(this.data[movePoint]);
     }
   }
 
