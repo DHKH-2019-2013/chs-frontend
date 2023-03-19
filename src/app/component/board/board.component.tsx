@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { GetMoveParams, GetMoveResponse } from "../../config/http-rest-client-config/http-rest-client-config.i";
+import {
+  CheckValidMoveParams,
+  CheckValidMoveResponse,
+  GetMoveParams,
+  GetMoveResponse,
+} from "../../config/http-rest-client-config/http-rest-client-config.i";
 import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
 import { INTELIGENCE } from "../../constant/constant";
 import { Chessman } from "../../entities/chessman/chessman";
@@ -20,12 +25,7 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
     })();
   }, [playerMoved]);
 
-  function updateBoardChessman(currentPos: string, nextPos: string) {
-    // update chessman position by swapping
-    board[nextPos].object = board[currentPos].object;
-    board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
-  }
-
+  // move functions
   function handleBotCastling(currentPos: string, nextPos: string): CastlingResult {
     if (["K", "k"].includes(board[currentPos].object.get().code)) {
       if (currentPos === "e8" && nextPos === "g8") {
@@ -56,6 +56,16 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
     }
 
     return { isCastling: false };
+  }
+
+  function getChessmanMove(currentPos: string) {
+    return board[currentPos]?.object?.move(board, currentPos);
+  }
+
+  function updateBoardChessman(currentPos: string, nextPos: string) {
+    // update chessman position by swapping
+    board[nextPos].object = board[currentPos].object;
+    board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
   }
 
   async function moveChessmanByBot(playerMove: string) {
@@ -89,13 +99,21 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
     });
   }
 
-  function moveChessmanByPlayer(event: any, currentPos: string) {
+  async function moveChessmanByPlayer(event: any, currentPos: string) {
     try {
       // get next chessman position
       const nextPos = document.elementFromPoint(event.clientX, event.clientY).id;
 
       // check if next position is same with previous
       if (nextPos === currentPos) return new Error("samePosition");
+
+      // check if next move is valid
+      const params: CheckValidMoveParams = {
+        fen: getBoardFen(),
+        move: currentPos + nextPos,
+      };
+      const result: CheckValidMoveResponse = await HttpRestClientConfig.checkValidMove(params);
+      if (!result.isValidMove) return;
 
       updateBoardChessman(currentPos, nextPos);
 
@@ -114,10 +132,7 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
     }
   }
 
-  function getChessmanMove(currentPos: string) {
-    return board[currentPos]?.object?.move(board, currentPos);
-  }
-
+  // style functions
   function hightlightSelectedCell(event: any) {
     if (event.target.src.includes("empty")) {
       event.preventDefault();

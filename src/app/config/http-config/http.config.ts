@@ -13,6 +13,7 @@ export class HttpConfig {
       bff: {
         initializeChessBoard: `${this.appConfig.bffBaseUrl}/initialize-chess-board`,
         getMove: `${this.appConfig.bffBaseUrl}/move`,
+        checkValidMove: `${this.appConfig.bffBaseUrl}/check-valid-move`,
       },
     };
   }

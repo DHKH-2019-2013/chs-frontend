@@ -1,6 +1,12 @@
 import { HttpService } from "../../service/http/http.service";
 import { HttpConfig } from "../http-config/http.config";
-import { GetInitializeChessBoardResponse, GetMoveParams, GetMoveResponse } from "./http-rest-client-config.i";
+import {
+  CheckValidMoveParams,
+  CheckValidMoveResponse,
+  GetInitializeChessBoardResponse,
+  GetMoveParams,
+  GetMoveResponse,
+} from "./http-rest-client-config.i";
 
 export class HttpRestClientConfig {
   static async getInitializeChessBoard(): Promise<GetInitializeChessBoardResponse> {
@@ -10,6 +16,11 @@ export class HttpRestClientConfig {
 
   static async getMove(params: GetMoveParams): Promise<GetMoveResponse> {
     const getMoveUrl = new HttpConfig().getConfig().bff.getMove;
+    return await HttpService.get(getMoveUrl, { ...params });
+  }
+
+  static async checkValidMove(params: CheckValidMoveParams): Promise<CheckValidMoveResponse> {
+    const getMoveUrl = new HttpConfig().getConfig().bff.checkValidMove;
     return await HttpService.get(getMoveUrl, { ...params });
   }
 }

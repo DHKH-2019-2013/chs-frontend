@@ -13,3 +13,12 @@ export interface GetMoveResponse {
   move: string;
   isCheckmate: boolean;
 }
+
+export interface CheckValidMoveParams {
+  fen: string;
+  move: string;
+}
+
+export interface CheckValidMoveResponse {
+  isValidMove: boolean;
+}
