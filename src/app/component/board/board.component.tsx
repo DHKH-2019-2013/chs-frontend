@@ -2,19 +2,38 @@ import React, { useEffect, useState } from "react";
 import {
   CheckValidMoveParams,
   CheckValidMoveResponse,
+  GetInitializeChessBoardResponse,
   GetMoveParams,
   GetMoveResponse,
 } from "../../config/http-rest-client-config/http-rest-client-config.i";
 import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
 import { INTELIGENCE } from "../../constant/constant";
+import { Board } from "../../entities/board/board";
 import { Chessman } from "../../entities/chessman/chessman";
 import { ChessmanComponent } from "../chessman/chessman.component";
 import { BoardProps, CastlingResult } from "./board.component.i";
 
-export default function BoardComponent({ board, getBoardFen, setBoardFen }: BoardProps) {
+export default function BoardComponent({ }: BoardProps) {
+  const [_board, _setBoard] = useState(new Board())
+  const [board, setBoard] = useState(_board.getData())
   const [change, setChange] = useState(false);
   const [playerMoved, setPlayerMoved] = useState("");
 
+  useEffect(() => {
+    (async () => {
+      const response: GetInitializeChessBoardResponse = await HttpRestClientConfig.getInitializeChessBoard();
+      setBoardFen(response.fen);
+    })();
+  });
+
+  function setBoardFen(fen: string) {
+    _board.setFen(fen);
+  }
+
+  function getBoardFen(): string {
+    return _board.getFen();
+  }
+  
   useEffect(() => {}, [change]);
 
   useEffect(() => {
@@ -179,23 +198,21 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
   }
 
   return (
-    <>
-      <div id="board-container">
-        <img id="board" src="assets/board.png" alt="chess-board" />
-        {Object.keys(board).map((key) => {
-          return (
-            <ChessmanComponent
-              key={key}
-              data={board[key]}
-              currentPos={key}
-              moveChessmanByPlayer={moveChessmanByPlayer}
-              hightlightSelectedCell={hightlightSelectedCell}
-              unHightlightSelectedCell={unHightlightSelectedCell}
-              unHightlightMovePoint={unHightlightMovePoint}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div id="board-container">
+      <img id="board" src="assets/board.png" alt="chess-board" />
+      {Object.keys(board).map((key) => {
+        return (
+          <ChessmanComponent
+            key={key}
+            data={board[key]}
+            currentPos={key}
+            moveChessmanByPlayer={moveChessmanByPlayer}
+            hightlightSelectedCell={hightlightSelectedCell}
+            unHightlightSelectedCell={unHightlightSelectedCell}
+            unHightlightMovePoint={unHightlightMovePoint}
+          />
+        );
+      })}
+    </div>
   );
 }
