@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   CheckValidMoveParams,
   CheckValidMoveResponse,
-  GetInitializeChessBoardResponse,
   GetMoveParams,
   GetMoveResponse,
 } from "../../config/http-rest-client-config/http-rest-client-config.i";
@@ -10,30 +9,13 @@ import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-
 import { INTELIGENCE } from "../../constant/constant";
 import { Board } from "../../entities/board/board";
 import { Chessman } from "../../entities/chessman/chessman";
-import { ChessmanComponent } from "../chessman/chessman.component";
+import ChessmanComponent from "../chessman/chessman.component";
 import { BoardProps, CastlingResult } from "./board.component.i";
 
-export default function BoardComponent({ }: BoardProps) {
-  const [_board, _setBoard] = useState(new Board())
-  const [board, setBoard] = useState(_board.getData())
+export default function BoardComponent({ board, getBoardFen, setBoardFen }: BoardProps) {
   const [change, setChange] = useState(false);
   const [playerMoved, setPlayerMoved] = useState("");
 
-  useEffect(() => {
-    (async () => {
-      const response: GetInitializeChessBoardResponse = await HttpRestClientConfig.getInitializeChessBoard();
-      setBoardFen(response.fen);
-    })();
-  });
-
-  function setBoardFen(fen: string) {
-    _board.setFen(fen);
-  }
-
-  function getBoardFen(): string {
-    return _board.getFen();
-  }
-  
   useEffect(() => {}, [change]);
 
   useEffect(() => {

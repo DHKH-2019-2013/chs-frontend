@@ -1,7 +1,5 @@
 import React from "react";
 
-export function BotSettingsBar() {
-  return (
-    <div>SETTINGS</div>
-  )
+export default function BotSettingsBarComponent() {
+  return <div>SETTINGS</div>;
 }

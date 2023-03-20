@@ -1,7 +1,7 @@
 import React from "react";
 import { ChessmanProps } from "./chessman.component.i";
 
-export function ChessmanComponent({
+export default function ChessmanComponent({
   data,
   currentPos,
   moveChessmanByPlayer,
