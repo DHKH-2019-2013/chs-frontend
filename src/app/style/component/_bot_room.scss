@@ -1,0 +1,14 @@
+div#web-bot-room {
+  display: grid;
+  grid-template-columns: 80% 20%;
+  grid-template-rows: auto;
+  height: 100vh;
+  
+  div#board-container {
+    margin: auto auto;
+  }
+
+  div#bot-settings-bar {
+    margin: auto 0px;
+  }
+}

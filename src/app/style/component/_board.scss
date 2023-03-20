@@ -1,6 +1,8 @@
 #board-container {
-  width: max-content;
-  position: relative;
   display: block;
-  transform: scale(0.6, 0.6) translate(-34%, -34%);
+  position: relative;
+
+  img#board {
+    width: calc($size-chess * 8);
+  }
 }

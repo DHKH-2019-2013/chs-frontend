@@ -4,8 +4,8 @@ div.chessman-container {
   img {
     &.chessman {
       display: inline-block;
-      width: 150px;
-      height: 150px;
+      width: $size-chess;
+      height: $size-chess;
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.1);
@@ -25,8 +25,8 @@ div.chessman-container {
   & .move-point.active {
     display: inline-block;
     position: absolute;
-    width: 75px;
-    height: 75px;
+    width: $size-chess-move-point;
+    height: $size-chess-move-point;
     top: 0px;
     left: 0px;
     border-radius: 50%;
@@ -38,8 +38,8 @@ div.chessman-container {
   & .move-point.active-enemy {
     display: inline-block;
     position: absolute;
-    width: 150px;
-    height: 150px;
+    width: $size-chess;
+    height: $size-chess;
     top: 0px;
     left: 0px;
     border-radius: 50%;

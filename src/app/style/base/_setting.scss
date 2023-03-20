@@ -1,1 +1,5 @@
-$body-bg: rgba(49,46,43,255);
+$color-body-background: rgba(49,46,43,255);
+
+// $ chess position depend on chess size (Board.WIDTH)
+$size-chess: 110px;
+$size-chess-move-point: calc($size-chess / 2)

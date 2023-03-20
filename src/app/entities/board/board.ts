@@ -4,7 +4,7 @@ import { Chessman } from "../chessman/chessman";
 import { BoardInfo, Position } from "./board.i";
 
 export class Board {
-  static readonly WIDTH: number = 150;
+  static readonly WIDTH: number = 110;
   static readonly MIN_ROW: number = 1;
   static readonly MAX_ROW: number = 8;
 

@@ -24,9 +24,9 @@ export default function BotRoomComponent() {
   }
 
   return (
-    <>
+    <div id="web-bot-room">
       <BoardComponent board={board.current.getData()} getBoardFen={getBoardFen} setBoardFen={setBoardFen} />
       <BotSettingsBarComponent />
-    </>
+    </div>
   );
 }

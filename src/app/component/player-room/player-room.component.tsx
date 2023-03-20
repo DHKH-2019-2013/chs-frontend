@@ -23,8 +23,8 @@ export default function PlayerRoomComponent() {
   }
 
   return (
-    <>
+    <div id="web-player-room">
       <BoardComponent board={board.current.getData()} getBoardFen={getBoardFen} setBoardFen={setBoardFen} />
-    </>
+    </div>
   );
 }
