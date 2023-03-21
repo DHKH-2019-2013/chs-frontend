@@ -1,0 +1,49 @@
+div.chessman-container {
+  position: absolute;
+  width: fit-content;
+  img {
+    &.chessman {
+      display: inline-block;
+      width: $size-chess;
+      height: $size-chess;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
+    
+      &.pointing {
+        border: 7px solid rgba(255, 255, 255, 0.5);
+      }
+    
+      &.selected {
+        background-color: rgba(255, 255, 0, 0.5);
+      }
+    }
+  }
+
+  & .move-point.active {
+    display: inline-block;
+    position: absolute;
+    width: $size-chess-move-point;
+    height: $size-chess-move-point;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+    transform: translate(50%, 50%) scale(0.6, 0.6);
+    background-color: rgba(0, 0, 0, 0.2);
+    pointer-events:none;
+  }
+
+  & .move-point.active-enemy {
+    display: inline-block;
+    position: absolute;
+    width: $size-chess;
+    height: $size-chess;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+    border: 10px solid rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+  }
+}

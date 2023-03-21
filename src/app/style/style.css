@@ -26,12 +26,8 @@ li {
   list-style: none;
 }
 
-#board-container {
-  display: block;
-  position: relative;
-}
 #board-container img#board {
-  width: 880px;
+  width: 640px;
 }
 
 div.chessman-container {
@@ -41,15 +37,15 @@ div.chessman-container {
 }
 div.chessman-container img.chessman {
   display: inline-block;
-  width: 110px;
-  height: 110px;
+  width: 80px;
+  height: 80px;
 }
 div.chessman-container img.chessman:hover {
   background-color: rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 div.chessman-container img.chessman.pointing {
-  border: 10px solid rgba(255, 255, 255, 0.5);
+  border: 7px solid rgba(255, 255, 255, 0.5);
 }
 div.chessman-container img.chessman.selected {
   background-color: rgba(255, 255, 0, 0.5);
@@ -57,8 +53,8 @@ div.chessman-container img.chessman.selected {
 div.chessman-container .move-point.active {
   display: inline-block;
   position: absolute;
-  width: 55px;
-  height: 55px;
+  width: 40px;
+  height: 40px;
   top: 0px;
   left: 0px;
   border-radius: 50%;
@@ -69,8 +65,8 @@ div.chessman-container .move-point.active {
 div.chessman-container .move-point.active-enemy {
   display: inline-block;
   position: absolute;
-  width: 110px;
-  height: 110px;
+  width: 80px;
+  height: 80px;
   top: 0px;
   left: 0px;
   border-radius: 50%;
@@ -125,20 +121,158 @@ div#web-main-intro #web-game-mode img:hover {
 
 div#web-bot-room {
   display: grid;
-  grid-template-columns: 80% 20%;
+  grid-template-columns: 50% 50%;
   grid-template-rows: auto;
   height: 100vh;
+  grid-column-gap: 20px;
 }
 div#web-bot-room div#board-container {
-  margin: auto auto;
+  position: relative;
+  margin: auto 0px auto auto;
 }
 div#web-bot-room div#bot-settings-bar {
-  margin: auto 0px;
+  margin: auto auto auto 0px;
 }
 
 div#bot-settings-bar {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 10% auto 10%;
+  grid-gap: 5px;
+  width: 640px;
+  height: 640px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+}
+div#bot-settings-bar #bot-settings-bar-difficulty h3 {
+  color: white;
+  font-size: 2rem;
+  font-weight: lighter;
+}
+div#bot-settings-bar #bot-settings-bar-difficulty #difficulty-list {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 5px;
+}
+div#bot-settings-bar #bot-settings-bar-difficulty #difficulty-list button {
+  width: 100%;
+  padding: 10px 0px;
+  border-radius: 5px;
+}
+div#bot-settings-bar #bot-settings-bar-difficulty #difficulty-list button:hover {
+  background-color: gray;
+  cursor: pointer;
+}
+div#bot-settings-bar #bot-settings-bar-difficulty #difficulty-list button.difficulty-active {
+  background-color: rgb(134, 123, 123);
+}
+div#bot-settings-bar #bot-settings-bar-history {
+  background-color: gray;
+}
+div#bot-settings-bar #bot-settings-bar-action {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 5px;
+}
+div#bot-settings-bar #bot-settings-bar-action button {
+  width: 100%;
+  padding: 10px 0px;
+  border-radius: 5px;
+}
+div#bot-settings-bar #bot-settings-bar-action button:hover {
+  background-color: gray;
+  cursor: pointer;
+}
+
+div#web-player-room {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: auto;
+  height: 100vh;
+  grid-column-gap: 20px;
+}
+div#web-player-room div#board-container {
+  position: relative;
+  margin: auto 0px auto auto;
+}
+div#web-player-room div#player-settings-bar {
+  margin: auto auto auto 0px;
+}
+
+div#player-settings-bar {
+  width: 640px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+div#player-settings-bar div#player-settings-tabs-container {
+  height: 50px;
+  width: 100%;
+}
+div#player-settings-bar div#player-settings-tabs-container button {
+  width: 33.3333333333%;
+  height: 100%;
+  padding: 10px;
+}
+div#player-settings-bar div#player-settings-tabs-container button:hover {
+  background-color: rgb(87, 74, 74);
+  cursor: pointer;
+}
+div#player-settings-bar div#player-settings-main {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto 10%;
+  grid-gap: 5px;
+  width: 100%;
+  height: 590px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+div#player-settings-bar div#player-settings-main #player-settings-main-message-display {
+  background-color: gray;
+  overflow-y: scroll;
+  padding: 0px 15px;
+}
+div#player-settings-bar div#player-settings-main #player-settings-main-message-display .bubble-message {
+  display: block;
+  background-color: rgb(129, 129, 232);
+  font-size: 1.5rem;
+  padding: 10px;
+  margin: 10px 0px;
+  border-radius: 5px;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  word-break: break-all;
+}
+div#player-settings-bar div#player-settings-main #player-settings-main-message-type {
+  display: grid;
+  grid-template-columns: 80% 20%;
+  grid-gap: 5px;
+}
+div#player-settings-bar div#player-settings-main #player-settings-main-message-type input[type=button] {
+  width: 100%;
+  padding: 10px 0px;
+  border-radius: 5px;
+}
+div#player-settings-bar div#player-settings-main #player-settings-main-message-type input[type=button]:hover {
+  background-color: gray;
+  cursor: pointer;
+}
+div#player-settings-bar div#player-settings-list {
+  background-color: gray;
+  height: 590px;
+}
+div#player-settings-bar div#player-settings-action {
+  background-color: gray;
+  height: 590px;
+}
+div#player-settings-bar div#player-settings-list li, div#player-settings-bar div#player-settings-action li {
   display: inline-block;
-  width: 50px;
-  height: 880px;
-  background-color: red;
+  width: 100%;
+  height: 50px;
+  padding: 10px 0px;
+  font-size: 2rem;
+  text-align: center;
+}
+div#player-settings-bar div#player-settings-list li:hover, div#player-settings-bar div#player-settings-action li:hover {
+  background-color: rgb(48, 39, 39);
+  cursor: pointer;
 }/*# sourceMappingURL=style.css.map */

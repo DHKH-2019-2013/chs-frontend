@@ -1,0 +1,57 @@
+div#bot-settings-bar {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 10% auto 10%;
+  grid-gap: 5px;
+  width: calc($size-chess * 8);
+  height: calc($size-chess * 8);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+
+  #bot-settings-bar-difficulty {
+    h3 {
+      color: white;
+      font-size: 2.0rem;
+      font-weight: lighter;
+    }
+    #difficulty-list {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      grid-gap: 5px;
+      button {
+        width: 100%;
+        padding: 10px 0px;
+        border-radius: 5px;
+      
+        &:hover {
+          background-color: gray;
+          cursor: pointer;
+        }
+        
+        &.difficulty-active {
+          background-color: rgb(134, 123, 123);
+        }
+      }
+    }
+  }
+
+  #bot-settings-bar-history {
+    background-color: gray;
+  }
+
+  #bot-settings-bar-action {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 5px;
+    button {
+      width: 100%;
+      padding: 10px 0px;
+      border-radius: 5px;
+    
+      &:hover {
+        background-color: gray;
+        cursor: pointer;
+      }
+    }
+  }
+}

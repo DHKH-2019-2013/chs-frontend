@@ -1,0 +1,93 @@
+div#player-settings-bar {
+  width: calc($size-chess * 8);
+  background-color: rgba(0, 0, 0, 0.5);
+  
+  div#player-settings-tabs-container {
+    height: $size-player-settings-tabs-container;
+    width: 100%;
+
+    button {
+      width: (100% / 3);
+      height: 100%;
+      padding: 10px;
+
+      &:hover {
+        background-color: rgb(87, 74, 74);
+        cursor: pointer;
+      }
+    }
+  }
+
+  div#player-settings-main {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto 10%;
+    grid-gap: 5px;
+    width: 100%;
+    height: calc($size-chess * 8 - $size-player-settings-tabs-container);
+    background-color: rgba(0, 0, 0, 0.5);
+  
+    #player-settings-main-message-display {
+      background-color: gray;
+      overflow-y: scroll;
+      padding: 0px 15px;
+  
+      .bubble-message {
+        display: block;
+        background-color: rgb(129, 129, 232);
+        font-size: 1.5rem;
+        padding: 10px;
+        margin: 10px 0px;
+        border-radius: 5px;
+        width: fit-content;
+        max-width: 100%;
+        word-break: break-all;
+      }
+    }
+  
+    #player-settings-main-message-type {
+      display: grid;
+      grid-template-columns: 80% 20%;
+      grid-gap: 5px;
+      
+      // input[type="text"] {}
+  
+      input[type="button"] {
+        width: 100%;
+        padding: 10px 0px;
+        border-radius: 5px;
+      
+        &:hover {
+          background-color: gray;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  
+  div#player-settings-list {
+    background-color: gray;
+    height: calc($size-chess * 8 - $size-player-settings-tabs-container);
+  }
+
+  div#player-settings-action {
+    background-color: gray;
+    height: calc($size-chess * 8 - $size-player-settings-tabs-container);
+  }
+
+  div#player-settings-list, div#player-settings-action {
+    li {
+      display: inline-block;
+      width: 100%;
+      height: 50px;
+      padding: 10px 0px;
+      font-size: 2rem;
+      text-align: center;
+    
+      &:hover {
+        background-color: rgb(48, 39, 39);
+        cursor: pointer;
+      }
+    }
+  }
+}

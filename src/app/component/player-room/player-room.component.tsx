@@ -3,6 +3,7 @@ import { GetInitializeChessBoardResponse } from "../../config/http-rest-client-c
 import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
 import { Board } from "../../entities/board/board";
 import BoardComponent from "../board/board.component";
+import PlayerSettingsBarComponent from "../player-settings-bar/player-settings-bar.component";
 
 export default function PlayerRoomComponent() {
   const board = useRef(new Board());
@@ -25,6 +26,7 @@ export default function PlayerRoomComponent() {
   return (
     <div id="web-player-room">
       <BoardComponent board={board.current.getData()} getBoardFen={getBoardFen} setBoardFen={setBoardFen} />
+      <PlayerSettingsBarComponent />
     </div>
   );
 }

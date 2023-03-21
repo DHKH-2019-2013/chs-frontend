@@ -1,0 +1,5 @@
+#board-container {
+  img#board {
+    width: calc($size-chess * 8);
+  }
+}

@@ -1,5 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function BotSettingsBarComponent() {
-  return <div id="bot-settings-bar">SETTINGS</div>;
+  useEffect(() => {
+    const $difficultyButtons = document.querySelectorAll("#difficulty-list button")
+    $difficultyButtons.forEach(elem => {
+      elem.addEventListener("click", () => {
+        $difficultyButtons.forEach(elem => { elem.classList.remove("difficulty-active") });
+        elem.classList.add("difficulty-active")
+      })
+    })
+  })
+
+  return (
+    <div id="bot-settings-bar">
+      <div id="bot-settings-bar-difficulty">
+        <h3>Difficulty</h3>
+        <div id="difficulty-list">
+          <button>Easy</button>
+          <button className="difficulty-active">Medium</button>
+          <button>Hard</button>
+          <button>Expert</button>
+        </div>
+      </div>
+      <div id="bot-settings-bar-history"></div>
+      <div id="bot-settings-bar-action">
+        <button>{"<"} Prev Move</button>
+        <button>Next Move {">"}</button>
+        <button>New Game</button>
+      </div>
+    </div>
+  )
 }

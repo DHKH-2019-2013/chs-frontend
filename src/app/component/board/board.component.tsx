@@ -134,14 +134,14 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
   }
 
   // style functions
-  function hightlightSelectedCell(event: any) {
+  function highLightSelectedCell(event: any) {
     if (event.target.src.includes("empty")) {
       event.preventDefault();
       return;
     }
 
     if (event.type === "click") {
-      if (document.querySelector(".selected")?.id !== event.target.id) unHightlightSelectedCell();
+      if (document.querySelector(".selected")?.id !== event.target.id) unHighLightSelectedCell();
       event.target.classList.toggle("selected");
     }
     if (event.type === "dragstart") event.target.classList.add("selected");
@@ -151,7 +151,7 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
 
   function displayChessmanMovePoint(event: any) {
     // remove previous move point
-    unHightlightMovePoint();
+    unHighLightMovePoint();
 
     // set new move point
     if (event.target.classList.contains("selected")) {
@@ -169,11 +169,11 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
     }
   }
 
-  function unHightlightSelectedCell() {
+  function unHighLightSelectedCell() {
     document.querySelector(".selected")?.classList.remove("selected");
   }
 
-  function unHightlightMovePoint() {
+  function unHighLightMovePoint() {
     document.querySelectorAll(".active, .active-enemy").forEach((elem) => {
       elem.classList.remove("active", "active-enemy");
     });
@@ -189,9 +189,9 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
             data={board[key]}
             currentPos={key}
             moveChessmanByPlayer={moveChessmanByPlayer}
-            hightlightSelectedCell={hightlightSelectedCell}
-            unHightlightSelectedCell={unHightlightSelectedCell}
-            unHightlightMovePoint={unHightlightMovePoint}
+            highLightSelectedCell={highLightSelectedCell}
+            unHighLightSelectedCell={unHighLightSelectedCell}
+            unHighLightMovePoint={unHighLightMovePoint}
           />
         );
       })}

@@ -1,8 +1,11 @@
 @import './base/setting';
 @import './base/default';
 
-@import './component/board';
-@import './component/chessman';
-@import './component/home';
-@import './component/bot_room';
-@import './component/bot_settings_bar';
+@import '../component/board/board';
+@import '../component/chessman/chessman';
+@import '../component/home/home';
+@import '../component/bot-room/bot_room';
+@import '../component/bot-settings-bar/bot_settings_bar';
+@import '../component/player-room/player_room';
+@import '../component/player-settings-bar/player_settings_bar';
+@import '../component/room/room';
