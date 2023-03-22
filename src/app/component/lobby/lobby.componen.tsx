@@ -47,5 +47,5 @@ export default function LobbyComponent() {
         </table>
       </div>
     </div>
-  )
+  );
 }
