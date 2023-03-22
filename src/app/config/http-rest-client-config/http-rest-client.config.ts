@@ -10,17 +10,17 @@ import {
 
 export class HttpRestClientConfig {
   static async getInitializeChessBoard(): Promise<GetInitializeChessBoardResponse> {
-    const initializeChessBoardUrl = new HttpConfig().getConfig().bff.initializeChessBoard;
+    const initializeChessBoardUrl = new HttpConfig().getConfig().bridge.initializeChessBoard;
     return await HttpService.get(initializeChessBoardUrl);
   }
 
   static async getMove(params: GetMoveParams): Promise<GetMoveResponse> {
-    const getMoveUrl = new HttpConfig().getConfig().bff.getMove;
+    const getMoveUrl = new HttpConfig().getConfig().bridge.getMove;
     return await HttpService.get(getMoveUrl, { ...params });
   }
 
   static async checkValidMove(params: CheckValidMoveParams): Promise<CheckValidMoveResponse> {
-    const getMoveUrl = new HttpConfig().getConfig().bff.checkValidMove;
+    const getMoveUrl = new HttpConfig().getConfig().bridge.checkValidMove;
     return await HttpService.get(getMoveUrl, { ...params });
   }
 }

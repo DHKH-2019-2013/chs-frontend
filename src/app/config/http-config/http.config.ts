@@ -10,10 +10,10 @@ export class HttpConfig {
 
   getConfig(): IHttpConfig {
     return {
-      bff: {
-        initializeChessBoard: `${this.appConfig.bffBaseUrl}/initialize-chess-board`,
-        getMove: `${this.appConfig.bffBaseUrl}/move`,
-        checkValidMove: `${this.appConfig.bffBaseUrl}/check-valid-move`,
+      bridge: {
+        initializeChessBoard: `${this.appConfig.bridgeBaseUrl}/initialize-chess-board`,
+        getMove: `${this.appConfig.bridgeBaseUrl}/move`,
+        checkValidMove: `${this.appConfig.bridgeBaseUrl}/check-valid-move`,
       },
     };
   }

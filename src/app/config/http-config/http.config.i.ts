@@ -1,5 +1,5 @@
 export interface IHttpConfig {
-  bff: {
+  bridge: {
     initializeChessBoard: string;
     getMove: string;
     checkValidMove: string;

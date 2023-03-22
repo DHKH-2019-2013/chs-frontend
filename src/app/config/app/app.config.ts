@@ -1,19 +1,19 @@
 export interface IENV {
   PORT?: number;
-  BFF_BASE_URL?: string;
+  BRIDGE_BASE_URL?: string;
 }
 
 export interface IConfig {
   port: number;
-  bffBaseUrl: string;
+  bridgeBaseUrl: string;
 }
 
 export class AppConfig implements IConfig {
   public port: number = 9000;
-  public bffBaseUrl: string = "http://localhost:3001";
+  public bridgeBaseUrl: string = "http://localhost:3001";
 
   constructor() {
     this.port = this.port;
-    this.bffBaseUrl = this.bffBaseUrl;
+    this.bridgeBaseUrl = this.bridgeBaseUrl;
   }
 }
