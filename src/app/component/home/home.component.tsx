@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "../../service/redirect/redirect.service";
 
 export default function HomeComponent() {
   return (
@@ -15,12 +16,8 @@ export default function HomeComponent() {
         </div>
       </div>
       <div id="web-game-mode">
-        <a href="/player">
-          <img src="assets/home_mode_player.png" />
-        </a>
-        <a href="/bot">
-          <img src="assets/home_mode_bot.png" />
-        </a>
+        <img onClick={Redirect.toRoom} src="assets/home_mode_player.png" />
+        <img onClick={Redirect.toBotBoard} src="assets/home_mode_bot.png" />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Redirect } from "../../service/redirect/redirect.service";
 
 export default function BotSettingsBarComponent() {
   useEffect(() => {
@@ -24,9 +25,10 @@ export default function BotSettingsBarComponent() {
       </div>
       <div id="bot-settings-bar-history"></div>
       <div id="bot-settings-bar-action">
+        <button onClick={Redirect.toHome}>Back to home screen</button>
         <button>{"<"} Prev Move</button>
         <button>Next Move {">"}</button>
-        <button>New Game</button>
+        <button onClick={Redirect.toBotBoard}>New Game</button>
       </div>
     </div>
   )

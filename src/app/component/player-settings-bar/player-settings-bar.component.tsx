@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "../../service/redirect/redirect.service";
 
 export default function PlayerSettingsBarComponent() {
   function sendMessage() {
@@ -29,7 +30,10 @@ export default function PlayerSettingsBarComponent() {
     $tabs.forEach((elem: any) => {
       elem.style.display = "none"
     })
-    document.getElementById(tabName).style.display = "grid";
+
+    let displayStyle = "block";
+    if (tabName === "player-settings-main") displayStyle = "grid";
+    document.getElementById(tabName).style.display = displayStyle;
   }
 
   function autoScrollBar() {
@@ -46,7 +50,9 @@ export default function PlayerSettingsBarComponent() {
       </div>
 
       <div id="player-settings-main" className="player-settings-tab">
-        <div id="player-settings-main-message-display"></div>
+        <div id="player-settings-main-message-display">
+          <span className="bubble-message">Welcome player!</span>
+        </div>
         <div id="player-settings-main-message-type">
           <input type="text" onKeyDown={handleEnterMessage}/>
           <input type="button" value="Send" onClick={sendMessage}/>
@@ -54,11 +60,12 @@ export default function PlayerSettingsBarComponent() {
       </div>
 
       <div id="player-settings-list" className="player-settings-tab" style={{ display: "none" }}>
-        <li>username</li>
+        <li>dong</li>
       </div>
 
       <div id="player-settings-action" className="player-settings-tab" style={{ display: "none" }}>
         <li>Surrender</li>
+        <li onClick={Redirect.toRoom}>Leave</li>
       </div>
     </div>
   )
