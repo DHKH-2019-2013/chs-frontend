@@ -43,3 +43,8 @@ export const INITIALIZE_POSITION: Record<string, any> = {
 };
 
 export const INTELIGENCE = 15;
+
+export enum GameMode {
+  PVP = "pvp",
+  PVE = "pve",
+}

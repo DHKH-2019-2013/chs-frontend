@@ -3,7 +3,9 @@ import { Redirect } from "../../service/redirect/redirect.service";
 
 export default function PlayerSettingsBarComponent() {
   function sendMessage() {
-    const $incomingMessage = document.querySelector("#player-settings-main-message-type input[type='text']") as HTMLInputElement;
+    const $incomingMessage = document.querySelector(
+      "#player-settings-main-message-type input[type='text']"
+    ) as HTMLInputElement;
     if ($incomingMessage.value.trim() === "") return;
 
     // create new bubble message
@@ -18,18 +20,18 @@ export default function PlayerSettingsBarComponent() {
     $incomingMessage.value = "";
 
     // toggle scroll bar
-    autoScrollBar()
+    autoScrollBar();
   }
 
   function handleEnterMessage(event: any) {
-    if(event.key === "Enter") sendMessage()
+    if (event.key === "Enter") sendMessage();
   }
 
   function switchTab(tabName: string) {
     const $tabs = document.querySelectorAll(".player-settings-tab");
     $tabs.forEach((elem: any) => {
-      elem.style.display = "none"
-    })
+      elem.style.display = "none";
+    });
 
     let displayStyle = "block";
     if (tabName === "player-settings-main") displayStyle = "grid";
@@ -38,15 +40,33 @@ export default function PlayerSettingsBarComponent() {
 
   function autoScrollBar() {
     const $messageContainer = document.getElementById("player-settings-main-message-display");
-    $messageContainer.scrollTop = $messageContainer.scrollHeight
+    $messageContainer.scrollTop = $messageContainer.scrollHeight;
   }
 
   return (
     <div id="player-settings-bar">
       <div id="player-settings-tabs-container">
-        <button onClick={() => {switchTab('player-settings-main')}}>Main</button>
-        <button onClick={() => {switchTab('player-settings-list')}}>Players</button>
-        <button onClick={() => {switchTab('player-settings-action')}}>Action</button>
+        <button
+          onClick={() => {
+            switchTab("player-settings-main");
+          }}
+        >
+          Main
+        </button>
+        <button
+          onClick={() => {
+            switchTab("player-settings-list");
+          }}
+        >
+          Players
+        </button>
+        <button
+          onClick={() => {
+            switchTab("player-settings-action");
+          }}
+        >
+          Action
+        </button>
       </div>
 
       <div id="player-settings-main" className="player-settings-tab">
@@ -54,8 +74,8 @@ export default function PlayerSettingsBarComponent() {
           <span className="bubble-message">Welcome player!</span>
         </div>
         <div id="player-settings-main-message-type">
-          <input type="text" onKeyDown={handleEnterMessage}/>
-          <input type="button" value="Send" onClick={sendMessage}/>
+          <input type="text" onKeyDown={handleEnterMessage} />
+          <input type="button" value="Send" onClick={sendMessage} />
         </div>
       </div>
 
@@ -68,5 +88,5 @@ export default function PlayerSettingsBarComponent() {
         <li onClick={Redirect.toRoom}>Leave</li>
       </div>
     </div>
-  )
+  );
 }

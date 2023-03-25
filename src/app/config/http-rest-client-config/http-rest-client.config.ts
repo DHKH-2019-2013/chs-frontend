@@ -4,8 +4,8 @@ import {
   CheckValidMoveParams,
   CheckValidMoveResponse,
   GetInitializeChessBoardResponse,
-  GetMoveParams,
-  GetMoveResponse,
+  GetBotMoveParams,
+  GetBotMoveResponse,
 } from "./http-rest-client-config.i";
 
 export class HttpRestClientConfig {
@@ -14,7 +14,7 @@ export class HttpRestClientConfig {
     return await HttpService.get(initializeChessBoardUrl);
   }
 
-  static async getMove(params: GetMoveParams): Promise<GetMoveResponse> {
+  static async getBotMove(params: GetBotMoveParams): Promise<GetBotMoveResponse> {
     const getMoveUrl = new HttpConfig().getConfig().bridge.getMove;
     return await HttpService.get(getMoveUrl, { ...params });
   }

@@ -2,26 +2,35 @@ import React, { useEffect, useState } from "react";
 import {
   CheckValidMoveParams,
   CheckValidMoveResponse,
-  GetMoveParams,
-  GetMoveResponse,
+  GetBotMoveParams,
+  GetBotMoveResponse,
+  GetPlayerMoveParams,
 } from "../../config/http-rest-client-config/http-rest-client-config.i";
 import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
-import { INTELIGENCE } from "../../constant/constant";
-import { Board } from "../../entities/board/board";
+import { sendPlayerMove } from "../../config/socket-client-config/socket-client-config";
+import { GameMode, INTELIGENCE } from "../../constant/constant";
 import { Chessman } from "../../entities/chessman/chessman";
 import ChessmanComponent from "../chessman/chessman.component";
 import { BoardProps, CastlingResult } from "./board.component.i";
 
-export default function BoardComponent({ board, getBoardFen, setBoardFen }: BoardProps) {
+export default function BoardComponent({ board, getBoardFen, setBoardFen, side, gameMode }: BoardProps) {
   const [change, setChange] = useState(false);
   const [playerMoved, setPlayerMoved] = useState("");
-
-  useEffect(() => {}, [change]);
 
   useEffect(() => {
     (async () => {
       if (playerMoved) {
-        await moveChessmanByBot(playerMoved);
+        switch (gameMode) {
+          case GameMode.PVP: {
+            // implement
+            sendPlayerMove(getBoardFen(), playerMoved);
+            break;
+          }
+          case GameMode.PVE: {
+            await moveChessmanByBot(playerMoved);
+            break;
+          }
+        }
       }
     })();
   }, [playerMoved]);
@@ -70,12 +79,12 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
   }
 
   async function moveChessmanByBot(playerMove: string) {
-    const params: GetMoveParams = {
+    const params: GetBotMoveParams = {
       fen: getBoardFen(),
       move: playerMove,
       int: String(INTELIGENCE),
     };
-    const response: GetMoveResponse = await HttpRestClientConfig.getMove(params);
+    const response: GetBotMoveResponse = await HttpRestClientConfig.getBotMove(params);
 
     setBoardFen(response.fen);
     const currentPos = response.move.slice(0, 2);
@@ -134,6 +143,15 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen }: Boar
   }
 
   // style functions
+  useEffect(() => {}, [change]);
+
+  useEffect(() => {
+    document.getElementById("board-container").style.transform = `rotate(${side ? "0deg" : "180deg"})`;
+    document.querySelectorAll(".chessman-container").forEach((elem: HTMLElement) => {
+      elem.style.transform = `rotate(${side ? "0deg" : "180deg"})`;
+    });
+  }, [side]);
+
   function highLightSelectedCell(event: any) {
     if (event.target.src.includes("empty")) {
       event.preventDefault();

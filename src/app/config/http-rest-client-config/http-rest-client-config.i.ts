@@ -2,13 +2,13 @@ export interface GetInitializeChessBoardResponse {
   fen: string;
 }
 
-export interface GetMoveParams {
+export interface GetBotMoveParams {
   fen: string;
   move: string;
   int: string;
 }
 
-export interface GetMoveResponse {
+export interface GetBotMoveResponse {
   fen: string;
   move: string;
   isCheckmate: boolean;
@@ -21,4 +21,15 @@ export interface CheckValidMoveParams {
 
 export interface CheckValidMoveResponse {
   isValidMove: boolean;
+}
+
+export interface GetPlayerMoveParams {
+  fen: string;
+  move: string;
+}
+
+export interface GetPlayerMoveResponse {
+  fen: string;
+  move: string;
+  isCheckmate: boolean;
 }

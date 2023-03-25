@@ -37,11 +37,11 @@ export class Board {
 
   private fen: string = "";
   private turn: boolean = false;
-  private side: boolean = false;
+  private side: boolean = true;
   private url: string = "";
   private data: Record<string, Position> = {}; //hashMap
 
-  constructor(fen: string = "", turn: boolean = false, side: boolean = false, url: string = "") {
+  constructor(fen: string = "", turn: boolean = false, side: boolean = true, url: string = "") {
     this.setFen(fen);
     this.setTurn(turn);
     this.setSide(side);
