@@ -2,6 +2,21 @@ import React from "react";
 import { Redirect } from "../../service/redirect/redirect.service";
 
 export default function PlayerSettingsBarComponent() {
+  function handleEnterMessage(event: any) {
+    if (event.key === "Enter") sendMessage();
+  }
+
+  function switchTab(tabName: string) {
+    const $tabs = document.querySelectorAll(".player-settings-tab");
+    $tabs.forEach((elem: any) => {
+      elem.style.display = "none";
+    });
+
+    let displayStyle = "block";
+    if (tabName === "player-settings-main") displayStyle = "grid";
+    document.getElementById(tabName).style.display = displayStyle;
+  }
+
   function sendMessage() {
     const $incomingMessage = document.querySelector(
       "#player-settings-main-message-type input[type='text']"
@@ -20,25 +35,6 @@ export default function PlayerSettingsBarComponent() {
     $incomingMessage.value = "";
 
     // toggle scroll bar
-    autoScrollBar();
-  }
-
-  function handleEnterMessage(event: any) {
-    if (event.key === "Enter") sendMessage();
-  }
-
-  function switchTab(tabName: string) {
-    const $tabs = document.querySelectorAll(".player-settings-tab");
-    $tabs.forEach((elem: any) => {
-      elem.style.display = "none";
-    });
-
-    let displayStyle = "block";
-    if (tabName === "player-settings-main") displayStyle = "grid";
-    document.getElementById(tabName).style.display = displayStyle;
-  }
-
-  function autoScrollBar() {
     const $messageContainer = document.getElementById("player-settings-main-message-display");
     $messageContainer.scrollTop = $messageContainer.scrollHeight;
   }

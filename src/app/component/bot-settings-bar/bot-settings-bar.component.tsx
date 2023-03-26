@@ -1,16 +1,38 @@
 import React, { useEffect } from "react";
 import { Redirect } from "../../service/redirect/redirect.service";
 
+export function sendMessageInBotRoom(message: string, isBotSend: boolean) {
+  message = message.trim();
+  if (message === "") return;
+
+  // create new bubble message
+  const $div = document.createElement("div");
+  const $newBubbleMessage = document.createElement("span");
+  const $bubbleMessageContainer = document.querySelector("#bot-settings-bar-history");
+
+  $newBubbleMessage.classList.add("bubble-message");
+  if (!isBotSend) $div.classList.add("right");
+  $newBubbleMessage.textContent = message;
+  $div.appendChild($newBubbleMessage);
+  $bubbleMessageContainer.appendChild($div);
+
+  // toggle scroll bar
+  const $messageContainer = document.querySelector("#bot-settings-bar-history");
+  $messageContainer.scrollTop = $messageContainer.scrollHeight;
+}
+
 export default function BotSettingsBarComponent() {
   useEffect(() => {
-    const $difficultyButtons = document.querySelectorAll("#difficulty-list button")
-    $difficultyButtons.forEach(elem => {
+    const $difficultyButtons = document.querySelectorAll("#difficulty-list button");
+    $difficultyButtons.forEach((elem) => {
       elem.addEventListener("click", () => {
-        $difficultyButtons.forEach(elem => { elem.classList.remove("difficulty-active") });
-        elem.classList.add("difficulty-active")
-      })
-    })
-  })
+        $difficultyButtons.forEach((elem) => {
+          elem.classList.remove("difficulty-active");
+        });
+        elem.classList.add("difficulty-active");
+      });
+    });
+  });
 
   return (
     <div id="bot-settings-bar">
@@ -23,13 +45,17 @@ export default function BotSettingsBarComponent() {
           <button>Expert</button>
         </div>
       </div>
-      <div id="bot-settings-bar-history"></div>
+      <div id="bot-settings-bar-history">
+        <div>
+          <span className="bubble-message">Welcome player!</span>
+        </div>
+      </div>
       <div id="bot-settings-bar-action">
         <button onClick={Redirect.toHome}>Back to home screen</button>
-        <button>{"<"} Prev Move</button>
-        <button>Next Move {">"}</button>
+        <button disabled>{"<"} Prev Move</button>
+        <button disabled>Next Move {">"}</button>
         <button onClick={Redirect.toBotBoard}>New Game</button>
       </div>
     </div>
-  )
+  );
 }

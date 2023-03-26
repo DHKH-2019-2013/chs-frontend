@@ -173,6 +173,24 @@ div#bot-settings-bar #bot-settings-bar-difficulty #difficulty-list button.diffic
 }
 div#bot-settings-bar #bot-settings-bar-history {
   background-color: gray;
+  overflow-y: scroll;
+  padding: 0px 15px;
+}
+div#bot-settings-bar #bot-settings-bar-history div.right {
+  display: flex;
+  justify-content: right;
+}
+div#bot-settings-bar #bot-settings-bar-history div .bubble-message {
+  display: block;
+  background-color: rgb(129, 129, 232);
+  font-size: 1.5rem;
+  padding: 10px;
+  margin: 10px 0px;
+  border-radius: 5px;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  word-break: break-all;
 }
 div#bot-settings-bar #bot-settings-bar-action {
   display: grid;

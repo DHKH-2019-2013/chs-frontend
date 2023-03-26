@@ -10,6 +10,7 @@ import { sendPlayerMove } from "../../config/socket-client-config/socket-client-
 import { GameMode, INTELIGENCE } from "../../constant/constant";
 import { Chessman } from "../../entities/chessman/chessman";
 import { socket } from "../../service/socket/socket.service";
+import { sendMessageInBotRoom } from "../bot-settings-bar/bot-settings-bar.component";
 import ChessmanComponent from "../chessman/chessman.component";
 import { BoardProps, CastlingResult, ListenUpdateMoveParams, PlayerMoveInfo } from "./board.component.i";
 
@@ -86,6 +87,21 @@ export default function BoardComponent({
     return { isCastling: false };
   }
 
+  function isGameOver(isGameOver: boolean, object: string) {
+    if (isGameOver) {
+      switch (object) {
+        case "you": {
+          console.log("you win");
+          break;
+        }
+        case "bot": {
+          sendMessageInBotRoom("You lose", true);
+          break;
+        }
+      }
+    }
+  }
+
   function getChessmanMove(currentPos: string) {
     return board[currentPos]?.object?.move(board, currentPos);
   }
@@ -130,8 +146,10 @@ export default function BoardComponent({
 
     // trigger board re-render
     forceUpdate();
+    sendMessageInBotRoom(`bot move from ${currentPos} to ${nextPos}`, true);
     toggleDisableMoveCursor(false);
     toggleCheckmate(response.isCheckmate);
+    isGameOver(response.isGameOver, "bot");
   }
 
   async function moveChessmanByPlayer(event: any, currentPos: string) {
@@ -166,6 +184,9 @@ export default function BoardComponent({
 
       // disable player mouse cursor
       toggleDisableMoveCursor(true);
+      toggleCheckmate(result.isCheckmate);
+      sendMessageInBotRoom(`you move from ${currentPos} to ${nextPos}`, false);
+      isGameOver(result.isGameOver, "you");
     } catch (e) {
       // do nothing
     }

@@ -37,6 +37,27 @@ div#bot-settings-bar {
 
   #bot-settings-bar-history {
     background-color: gray;
+    overflow-y: scroll;
+    padding: 0px 15px;
+
+    div {
+      &.right {
+        display: flex;
+        justify-content: right;
+      }
+
+      .bubble-message {
+        display: block;
+        background-color: rgb(129, 129, 232);
+        font-size: 1.5rem;
+        padding: 10px;
+        margin: 10px 0px;
+        border-radius: 5px;
+        width: fit-content;
+        max-width: 100%;
+        word-break: break-all;
+      }
+    }
   }
 
   #bot-settings-bar-action {
