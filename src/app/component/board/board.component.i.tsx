@@ -7,6 +7,7 @@ export interface BoardProps {
   getBoardFen: Function;
   setBoardFen: Function;
   side?: boolean;
+  getSide: Function;
   gameMode: GameMode;
 }
 

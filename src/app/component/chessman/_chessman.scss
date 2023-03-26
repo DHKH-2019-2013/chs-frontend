@@ -1,6 +1,8 @@
 div.chessman-container {
   position: absolute;
   width: fit-content;
+  width: $size-chess;
+  height: $size-chess;
   img {
     &.chessman {
       display: inline-block;
@@ -19,10 +21,14 @@ div.chessman-container {
       &.selected {
         background-color: rgba(255, 255, 0, 0.5);
       }
+
+      &.is-check-mate {
+        background-color: rgb(255, 0, 0);
+      }
     }
   }
 
-  & .move-point.active {
+  &.move-point.active {
     display: inline-block;
     position: absolute;
     width: $size-chess-move-point;
@@ -35,7 +41,7 @@ div.chessman-container {
     pointer-events:none;
   }
 
-  & .move-point.active-enemy {
+  &.move-point.active-enemy {
     display: inline-block;
     position: absolute;
     width: $size-chess;

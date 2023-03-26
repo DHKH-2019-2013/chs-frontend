@@ -13,7 +13,15 @@ import { socket } from "../../service/socket/socket.service";
 import ChessmanComponent from "../chessman/chessman.component";
 import { BoardProps, CastlingResult, ListenUpdateMoveParams, PlayerMoveInfo } from "./board.component.i";
 
-export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen, side, gameMode }: BoardProps) {
+export default function BoardComponent({
+  roomId,
+  board,
+  getBoardFen,
+  setBoardFen,
+  side,
+  getSide,
+  gameMode,
+}: BoardProps) {
   const [change, setChange] = useState(1);
   const [playerMove, setPlayerMove] = useState<PlayerMoveInfo>({ move: "", isCheckmate: false });
 
@@ -227,8 +235,11 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
   }
 
   function toggleCheckmate(isCheckmate: boolean) {
-    const code = side ? "_K" : "k";
-    console.log(document.querySelector(`img[src='assets/${code}.png']`));
+    const code = getSide() ? "K" : "_k";
+    const king$ = document.querySelector(`img[src='assets/${code}.png']`);
+    console.log(isCheckmate);
+    if (isCheckmate) king$.classList.add("is-check-mate");
+    else king$.classList.remove("is-check-mate");
   }
 
   return (

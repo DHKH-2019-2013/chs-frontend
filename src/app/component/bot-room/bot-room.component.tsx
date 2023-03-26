@@ -31,6 +31,9 @@ export default function BotRoomComponent() {
         getBoardFen={getBoardFen}
         setBoardFen={setBoardFen}
         side={true}
+        getSide={() => {
+          return true;
+        }}
         gameMode={GameMode.PVE}
       />
       <BotSettingsBarComponent />

@@ -69,6 +69,7 @@ export default function PlayerRoomComponent() {
         getBoardFen={getBoardFen}
         setBoardFen={setBoardFen}
         side={getSide()}
+        getSide={getSide}
         gameMode={GameMode.PVP}
       />
       <PlayerSettingsBarComponent />
