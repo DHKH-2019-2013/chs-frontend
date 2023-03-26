@@ -30,6 +30,7 @@ export default function BotRoomComponent() {
         board={board.current.getData()}
         getBoardFen={getBoardFen}
         setBoardFen={setBoardFen}
+        side={true}
         gameMode={GameMode.PVE}
       />
       <BotSettingsBarComponent />

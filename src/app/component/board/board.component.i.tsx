@@ -2,6 +2,7 @@ import { GameMode } from "../../constant/constant";
 import { Position } from "../../entities/board/board.i";
 
 export interface BoardProps {
+  roomId?: string;
   board: Record<string, Position>;
   getBoardFen: Function;
   setBoardFen: Function;
@@ -19,4 +20,15 @@ export interface CastlingResult {
     currentPos: string;
     nextPos: string;
   };
+}
+
+export interface PlayerMoveInfo {
+  move: string;
+  isCheckmate: boolean;
+}
+
+export interface ListenUpdateMoveParams {
+  fen: string;
+  move: string;
+  isCheckmate: boolean;
 }

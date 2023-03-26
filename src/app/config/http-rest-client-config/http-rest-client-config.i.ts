@@ -20,7 +20,9 @@ export interface CheckValidMoveParams {
 }
 
 export interface CheckValidMoveResponse {
+  fen?: string;
   isValidMove: boolean;
+  isCheckmate?: boolean;
 }
 
 export interface GetPlayerMoveParams {

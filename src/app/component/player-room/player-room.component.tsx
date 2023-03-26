@@ -13,10 +13,12 @@ export default function PlayerRoomComponent() {
   const board = useRef(new Board());
   const [isReady, setReady] = useState(false);
 
-  socket.on("start-match", async ({ side }) => {
-    setSide(side);
-    setReady(true);
-  });
+  useEffect(() => {
+    socket.on("start-match", async ({ side }) => {
+      setSide(side);
+      setReady(true);
+    });
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -62,6 +64,7 @@ export default function PlayerRoomComponent() {
   return (
     <div id="web-player-room">
       <BoardComponent
+        roomId={getRoomId()}
         board={board.current.getData()}
         getBoardFen={getBoardFen}
         setBoardFen={setBoardFen}

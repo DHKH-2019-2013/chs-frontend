@@ -4,38 +4,48 @@ import {
   CheckValidMoveResponse,
   GetBotMoveParams,
   GetBotMoveResponse,
-  GetPlayerMoveParams,
 } from "../../config/http-rest-client-config/http-rest-client-config.i";
 import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
 import { sendPlayerMove } from "../../config/socket-client-config/socket-client-config";
 import { GameMode, INTELIGENCE } from "../../constant/constant";
 import { Chessman } from "../../entities/chessman/chessman";
+import { socket } from "../../service/socket/socket.service";
 import ChessmanComponent from "../chessman/chessman.component";
-import { BoardProps, CastlingResult } from "./board.component.i";
+import { BoardProps, CastlingResult, ListenUpdateMoveParams, PlayerMoveInfo } from "./board.component.i";
 
-export default function BoardComponent({ board, getBoardFen, setBoardFen, side, gameMode }: BoardProps) {
-  const [change, setChange] = useState(false);
-  const [playerMoved, setPlayerMoved] = useState("");
+export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen, side, gameMode }: BoardProps) {
+  const [change, setChange] = useState(1);
+  const [playerMove, setPlayerMove] = useState<PlayerMoveInfo>({ move: "", isCheckmate: false });
+
+  useEffect(() => {
+    socket.on("listen-update-move", ({ fen, move, isCheckmate }: ListenUpdateMoveParams) => {
+      moveChessmanByAnotherPlayer({ fen, move, isCheckmate });
+    });
+  }, []);
 
   useEffect(() => {
     (async () => {
-      if (playerMoved) {
+      if (playerMove?.move) {
         switch (gameMode) {
           case GameMode.PVP: {
             // implement
-            sendPlayerMove(getBoardFen(), playerMoved);
+            sendPlayerMove(roomId, getBoardFen(), playerMove.move, playerMove.isCheckmate);
             break;
           }
           case GameMode.PVE: {
-            await moveChessmanByBot(playerMoved);
+            await moveChessmanByBot(playerMove);
             break;
           }
         }
       }
     })();
-  }, [playerMoved]);
+  }, [playerMove]);
 
   // move functions
+  function forceUpdate() {
+    setChange(change + Math.random() * 1);
+  }
+
   function handleBotCastling(currentPos: string, nextPos: string): CastlingResult {
     if (["K", "k"].includes(board[currentPos].object.get().code)) {
       if (currentPos === "e8" && nextPos === "g8") {
@@ -78,10 +88,22 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen, side, 
     board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
   }
 
-  async function moveChessmanByBot(playerMove: string) {
+  async function moveChessmanByAnotherPlayer(anotherPlayerMove: ListenUpdateMoveParams) {
+    setBoardFen(anotherPlayerMove.fen);
+
+    const currentPos = anotherPlayerMove.move.slice(0, 2);
+    const nextPos = anotherPlayerMove.move.slice(2, 4);
+    updateBoardChessman(currentPos, nextPos);
+
+    // trigger board re-render
+    forceUpdate();
+    toggleDisableMoveCursor(false);
+  }
+
+  async function moveChessmanByBot(playerMove: PlayerMoveInfo) {
     const params: GetBotMoveParams = {
       fen: getBoardFen(),
-      move: playerMove,
+      move: playerMove.move,
       int: String(INTELIGENCE),
     };
     const response: GetBotMoveResponse = await HttpRestClientConfig.getBotMove(params);
@@ -99,14 +121,15 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen, side, 
 
     // final
     // trigger board re-render
-    setChange(!change);
+    forceUpdate();
     // update player move
-    setPlayerMoved("");
+    const playerMoveInfo: PlayerMoveInfo = {
+      move: "",
+      isCheckmate: false,
+    };
+    setPlayerMove(playerMoveInfo);
     // disable player mouse cursor
-    document.querySelector("body").style.cursor = "initial";
-    document.querySelectorAll(".chessman").forEach((e: any) => {
-      e.style.pointerEvents = "initial";
-    });
+    toggleDisableMoveCursor(false);
   }
 
   async function moveChessmanByPlayer(event: any, currentPos: string) {
@@ -126,25 +149,27 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen, side, 
       if (!result.isValidMove) return;
 
       updateBoardChessman(currentPos, nextPos);
+      if (gameMode === GameMode.PVP) setBoardFen(result.fen);
 
       // final
       // trigger board re-render
-      setChange(!change);
+      forceUpdate();
+
       // update player move
-      setPlayerMoved(currentPos + nextPos);
+      const playerMoveInfo: PlayerMoveInfo = {
+        move: currentPos + nextPos,
+        isCheckmate: result.isCheckmate,
+      };
+      setPlayerMove(playerMoveInfo);
+
       // disable player mouse cursor
-      document.querySelector("body").style.cursor = "wait";
-      document.querySelectorAll(".chessman").forEach((e: any) => {
-        e.style.pointerEvents = "none";
-      });
+      toggleDisableMoveCursor(true);
     } catch (e) {
       // do nothing
     }
   }
 
   // style functions
-  useEffect(() => {}, [change]);
-
   useEffect(() => {
     document.getElementById("board-container").style.transform = `rotate(${side ? "0deg" : "180deg"})`;
     document.querySelectorAll(".chessman-container").forEach((elem: HTMLElement) => {
@@ -194,6 +219,16 @@ export default function BoardComponent({ board, getBoardFen, setBoardFen, side, 
   function unHighLightMovePoint() {
     document.querySelectorAll(".active, .active-enemy").forEach((elem) => {
       elem.classList.remove("active", "active-enemy");
+    });
+  }
+
+  function toggleDisableMoveCursor(onWait: boolean) {
+    const boardCursor = onWait ? "wait" : "initial";
+    const chessManCursor = onWait ? "none" : "initial";
+
+    (document.querySelector("#board-container") as HTMLElement).style.cursor = boardCursor;
+    document.querySelectorAll(".chessman").forEach((e: any) => {
+      e.style.pointerEvents = chessManCursor;
     });
   }
 
