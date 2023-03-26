@@ -98,6 +98,7 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     // trigger board re-render
     forceUpdate();
     toggleDisableMoveCursor(false);
+    toggleCheckmate(anotherPlayerMove.isCheckmate);
   }
 
   async function moveChessmanByBot(playerMove: PlayerMoveInfo) {
@@ -119,17 +120,10 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
       updateBoardChessman(_result.rider.currentPos, _result.rider.nextPos);
     } else updateBoardChessman(currentPos, nextPos);
 
-    // final
     // trigger board re-render
     forceUpdate();
-    // update player move
-    const playerMoveInfo: PlayerMoveInfo = {
-      move: "",
-      isCheckmate: false,
-    };
-    setPlayerMove(playerMoveInfo);
-    // disable player mouse cursor
     toggleDisableMoveCursor(false);
+    toggleCheckmate(response.isCheckmate);
   }
 
   async function moveChessmanByPlayer(event: any, currentPos: string) {
@@ -230,6 +224,11 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     document.querySelectorAll(".chessman").forEach((e: any) => {
       e.style.pointerEvents = chessManCursor;
     });
+  }
+
+  function toggleCheckmate(isCheckmate: boolean) {
+    const code = side ? "_K" : "k";
+    console.log(document.querySelector(`img[src='assets/${code}.png']`));
   }
 
   return (

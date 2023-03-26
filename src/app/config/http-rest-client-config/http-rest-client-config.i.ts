@@ -12,6 +12,7 @@ export interface GetBotMoveResponse {
   fen: string;
   move: string;
   isCheckmate: boolean;
+  isGameOver: boolean;
 }
 
 export interface CheckValidMoveParams {
@@ -23,15 +24,5 @@ export interface CheckValidMoveResponse {
   fen?: string;
   isValidMove: boolean;
   isCheckmate?: boolean;
-}
-
-export interface GetPlayerMoveParams {
-  fen: string;
-  move: string;
-}
-
-export interface GetPlayerMoveResponse {
-  fen: string;
-  move: string;
-  isCheckmate: boolean;
+  isGameOver?: boolean;
 }
