@@ -265,8 +265,8 @@ export default function BoardComponent({
   function toggleCheckmate(isCheckmate: boolean, isYourMove: boolean = false) {
     // there is so many place call this method :(
     let code = "";
-    if (isYourMove) code = side ? "_k" : "K";
-    else code = side ? "K" : "_k";
+    if (isYourMove) code = getSide() ? "_k" : "K";
+    else code = getSide() ? "K" : "_k";
     if (isCheckmate) document.querySelector(`img[src='assets/${code}.png']`).classList.add("is-check-mate");
     else {
       document
