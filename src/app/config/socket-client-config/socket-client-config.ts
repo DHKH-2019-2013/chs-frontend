@@ -7,3 +7,7 @@ export function joinRoom(roomId: string, name: string) {
 export function sendPlayerMove(roomId: string, fen: string, move: string, isCheckmate: boolean) {
   socket.emit("update-move", { roomId, fen, move, isCheckmate });
 }
+
+export function sendMessage(roomId: string, message: string) {
+  socket.emit("chat", { roomId, message });
+}

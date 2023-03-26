@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { Redirect } from "../../service/redirect/redirect.service";
 
-export function sendMessageInBotRoom(message: string, isBotSend: boolean) {
-  message = message.trim();
-  if (message === "") return;
+export function sendMessageInBotRoom(systemMessage: string, isYouSend: boolean) {
+  systemMessage = systemMessage.trim();
+  if (systemMessage === "") return;
 
   // create new bubble message
   const $div = document.createElement("div");
   const $newBubbleMessage = document.createElement("span");
   const $bubbleMessageContainer = document.querySelector("#bot-settings-bar-history");
 
+  if (isYouSend) $div.classList.add("right");
   $newBubbleMessage.classList.add("bubble-message");
-  if (!isBotSend) $div.classList.add("right");
-  $newBubbleMessage.textContent = message;
+  $newBubbleMessage.textContent = systemMessage;
   $div.appendChild($newBubbleMessage);
   $bubbleMessageContainer.appendChild($div);
 

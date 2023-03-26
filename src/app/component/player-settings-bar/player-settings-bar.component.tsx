@@ -1,9 +1,48 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { sendMessage } from "../../config/socket-client-config/socket-client-config";
 import { Redirect } from "../../service/redirect/redirect.service";
+import { socket } from "../../service/socket/socket.service";
+import { PlayerSettingsBarProps } from "./player-settings-bar.component.i";
 
-export default function PlayerSettingsBarComponent() {
+export function sendMessageInPlayerRoom(roomId: string, isYouSend: boolean, systemMessage?: string) {
+  const $incomingMessage = document.querySelector(
+    "#player-settings-main-message-type input[type='text']"
+  ) as HTMLInputElement;
+
+  let message = isYouSend ? $incomingMessage.value : systemMessage;
+  if (message.trim() === "") return;
+
+  // create new bubble message
+  const $div = document.createElement("div");
+  const $newBubbleMessage = document.createElement("span");
+  const $bubbleMessageContainer = document.querySelector("#player-settings-main-message-display");
+
+  if (isYouSend) $div.classList.add("right");
+  $newBubbleMessage.classList.add("bubble-message");
+  $newBubbleMessage.textContent = message;
+  $div.appendChild($newBubbleMessage);
+  $bubbleMessageContainer.appendChild($div);
+
+  // toggle scroll bar
+  const $messageContainer = document.getElementById("player-settings-main-message-display");
+  $messageContainer.scrollTop = $messageContainer.scrollHeight;
+
+  // send message to other player
+  if (isYouSend) sendMessage(roomId, $incomingMessage.value);
+
+  // clear input
+  if (isYouSend) $incomingMessage.value = "";
+}
+
+export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBarProps) {
+  useEffect(() => {
+    socket.on("incoming-chat", ({ message }) => {
+      sendMessageInPlayerRoom(roomId, false, message);
+    });
+  }, []);
+
   function handleEnterMessage(event: any) {
-    if (event.key === "Enter") sendMessage();
+    if (event.key === "Enter") sendMessageInPlayerRoom(roomId, true);
   }
 
   function switchTab(tabName: string) {
@@ -15,28 +54,6 @@ export default function PlayerSettingsBarComponent() {
     let displayStyle = "block";
     if (tabName === "player-settings-main") displayStyle = "grid";
     document.getElementById(tabName).style.display = displayStyle;
-  }
-
-  function sendMessage() {
-    const $incomingMessage = document.querySelector(
-      "#player-settings-main-message-type input[type='text']"
-    ) as HTMLInputElement;
-    if ($incomingMessage.value.trim() === "") return;
-
-    // create new bubble message
-    const $newBubbleMessage = document.createElement("span");
-    const $bubbleMessageContainer = document.querySelector("#player-settings-main-message-display");
-
-    $newBubbleMessage.classList.add("bubble-message");
-    $newBubbleMessage.textContent = $incomingMessage.value;
-    $bubbleMessageContainer.appendChild($newBubbleMessage);
-
-    // clear input
-    $incomingMessage.value = "";
-
-    // toggle scroll bar
-    const $messageContainer = document.getElementById("player-settings-main-message-display");
-    $messageContainer.scrollTop = $messageContainer.scrollHeight;
   }
 
   return (
@@ -67,11 +84,19 @@ export default function PlayerSettingsBarComponent() {
 
       <div id="player-settings-main" className="player-settings-tab">
         <div id="player-settings-main-message-display">
-          <span className="bubble-message">Welcome player!</span>
+          <div>
+            <span className="bubble-message">Welcome player!</span>
+          </div>
         </div>
         <div id="player-settings-main-message-type">
           <input type="text" onKeyDown={handleEnterMessage} />
-          <input type="button" value="Send" onClick={sendMessage} />
+          <input
+            type="button"
+            value="Send"
+            onClick={() => {
+              sendMessageInPlayerRoom(roomId, true);
+            }}
+          />
         </div>
       </div>
 

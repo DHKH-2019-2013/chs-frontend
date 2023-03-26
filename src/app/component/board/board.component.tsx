@@ -95,7 +95,7 @@ export default function BoardComponent({
           break;
         }
         case "bot": {
-          sendMessageInBotRoom("You lose", true);
+          sendMessageInBotRoom("You lose", false);
           break;
         }
       }
@@ -146,7 +146,7 @@ export default function BoardComponent({
 
     // trigger board re-render
     forceUpdate();
-    sendMessageInBotRoom(`bot move from ${currentPos} to ${nextPos}`, true);
+    sendMessageInBotRoom(`bot move from ${currentPos} to ${nextPos}`, false);
     toggleDisableMoveCursor(false);
     toggleCheckmate(response.isCheckmate);
     isGameOver(response.isGameOver, "bot");
@@ -159,6 +159,9 @@ export default function BoardComponent({
 
       // check if next position is same with previous
       if (nextPos === currentPos) return new Error("samePosition");
+      // check chessman is my side
+      if (typeof getSide() === "boolean" && board[currentPos].object.get().side !== getSide())
+        return new Error("Not your chessman");
 
       // check if next move is valid
       const params: CheckValidMoveParams = {
@@ -184,8 +187,13 @@ export default function BoardComponent({
 
       // disable player mouse cursor
       toggleDisableMoveCursor(true);
-      toggleCheckmate(result.isCheckmate);
-      sendMessageInBotRoom(`you move from ${currentPos} to ${nextPos}`, false);
+      toggleCheckmate(result.isCheckmate, true);
+      switch (gameMode) {
+        case GameMode.PVE: {
+          sendMessageInBotRoom(`you move from ${currentPos} to ${nextPos}`, true);
+          break;
+        }
+      }
       isGameOver(result.isGameOver, "you");
     } catch (e) {
       // do nothing
@@ -255,12 +263,17 @@ export default function BoardComponent({
     });
   }
 
-  function toggleCheckmate(isCheckmate: boolean) {
-    const code = getSide() ? "K" : "_k";
-    const king$ = document.querySelector(`img[src='assets/${code}.png']`);
-    console.log(isCheckmate);
-    if (isCheckmate) king$.classList.add("is-check-mate");
-    else king$.classList.remove("is-check-mate");
+  function toggleCheckmate(isCheckmate: boolean, isYourMove: boolean = false) {
+    // there is so many place call this method :(
+    let code = "";
+    if (isYourMove) code = getSide() ? "_k" : "K";
+    else code = getSide() ? "K" : "_k";
+    if (isCheckmate) document.querySelector(`img[src='assets/${code}.png']`).classList.add("is-check-mate");
+    else {
+      document
+        .querySelectorAll("img[src='assets/K.png'], img[src='assets/_k.png']")
+        .forEach((king) => king.classList.remove("is-check-mate"));
+    }
   }
 
   return (

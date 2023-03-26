@@ -72,7 +72,7 @@ export default function PlayerRoomComponent() {
         getSide={getSide}
         gameMode={GameMode.PVP}
       />
-      <PlayerSettingsBarComponent />
+      <PlayerSettingsBarComponent roomId={getRoomId()} />
     </div>
   );
 }

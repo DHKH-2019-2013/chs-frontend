@@ -253,7 +253,11 @@ div#player-settings-bar div#player-settings-main #player-settings-main-message-d
   overflow-y: scroll;
   padding: 0px 15px;
 }
-div#player-settings-bar div#player-settings-main #player-settings-main-message-display .bubble-message {
+div#player-settings-bar div#player-settings-main #player-settings-main-message-display div.right {
+  display: flex;
+  justify-content: right;
+}
+div#player-settings-bar div#player-settings-main #player-settings-main-message-display div .bubble-message {
   display: block;
   background-color: rgb(129, 129, 232);
   font-size: 1.5rem;
