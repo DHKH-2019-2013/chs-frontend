@@ -28,7 +28,7 @@ div.chessman-container {
     }
   }
 
-  &.move-point.active {
+  & .move-point.active {
     display: inline-block;
     position: absolute;
     width: $size-chess-move-point;
@@ -41,7 +41,7 @@ div.chessman-container {
     pointer-events:none;
   }
 
-  &.move-point.active-enemy {
+  & .move-point.active-enemy {
     display: inline-block;
     position: absolute;
     width: $size-chess;

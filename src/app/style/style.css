@@ -55,7 +55,7 @@ div.chessman-container img.chessman.selected {
 div.chessman-container img.chessman.is-check-mate {
   background-color: rgb(255, 0, 0);
 }
-div.chessman-container.move-point.active {
+div.chessman-container .move-point.active {
   display: inline-block;
   position: absolute;
   width: 40px;
@@ -67,7 +67,7 @@ div.chessman-container.move-point.active {
   background-color: rgba(0, 0, 0, 0.2);
   pointer-events: none;
 }
-div.chessman-container.move-point.active-enemy {
+div.chessman-container .move-point.active-enemy {
   display: inline-block;
   position: absolute;
   width: 80px;
