@@ -12,6 +12,7 @@ html {
 
 body {
   background-color: rgb(49, 46, 43);
+  overflow: hidden;
 }
 
 h1 {
@@ -92,8 +93,7 @@ div#web-main-intro #web-thumbnail {
   grid-row: 1/3;
 }
 div#web-main-intro #web-thumbnail img {
-  width: 650px;
-  height: 650px;
+  width: 100%;
 }
 div#web-main-intro #web-title {
   color: white;
@@ -311,35 +311,56 @@ div#web-lobby {
   height: 100vh;
 }
 div#web-lobby div#user-action {
+  position: relative;
+}
+div#web-lobby div#user-action div#user-menu {
   padding: 20px;
   grid-row: 1/3;
+  position: fixed;
+  width: 20%;
 }
-div#web-lobby div#user-action > * {
+div#web-lobby div#user-action div#user-menu > * {
   display: block;
 }
-div#web-lobby div#user-action input {
+div#web-lobby div#user-action div#user-menu input {
   width: 100%;
   height: 50px;
+  padding-left: 20px;
+  font-size: 2rem;
 }
-div#web-lobby div#user-action button {
+div#web-lobby div#user-action div#user-menu button {
   width: 100%;
   height: 50px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 2rem;
+  text-align: left;
+  padding-left: 20px;
 }
-div#web-lobby div#user-action button:hover {
+div#web-lobby div#user-action div#user-menu button:hover {
   cursor: pointer;
   opacity: 0.5;
 }
 div#web-lobby div#lobby-action {
   padding: 20px;
+  overflow-y: auto;
+  min-height: 100vh;
 }
 div#web-lobby div#lobby-action table {
   width: 100%;
   border-collapse: collapse;
+  background-color: rgba(0, 0, 0, 0.45);
 }
 div#web-lobby div#lobby-action table th, div#web-lobby div#lobby-action table td {
+  padding: 5px;
+}
+div#web-lobby div#lobby-action table th {
   font-size: 2rem;
-  color: white;
-  border: 1px solid white;
+  color: rgba(255, 255, 255, 0.3);
+}
+div#web-lobby div#lobby-action table td {
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 div#web-lobby div#lobby-action table tfoot {
   text-align: center;

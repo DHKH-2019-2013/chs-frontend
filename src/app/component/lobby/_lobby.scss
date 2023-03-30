@@ -1,44 +1,69 @@
+$user-action-width: 20%;
+
 div#web-lobby {
   display: grid;
-  grid-template-columns: 20% auto;
+  grid-template-columns: $user-action-width auto;
   grid-template-rows: 10% auto;
   height: 100vh;
 
   div#user-action {
-    padding: 20px;
-    grid-row: 1/3;
+    position: relative;
+    div#user-menu {
+      padding: 20px;
+      grid-row: 1/3;
+      position: fixed;
+      width: $user-action-width;
 
-    & > * {
-      display: block;
-    }
+      & > * {
+        display: block;
+      }
 
-    input {
-      width: 100%;
-      height: 50px;
-    }
+      input {
+        width: 100%;
+        height: 50px;
+        padding-left: 20px;
+        font-size: 2rem;
+      }
 
-    button {
-      width: 100%;
-      height: 50px;
-      &:hover {
-        cursor: pointer;
-        opacity: 0.5;
+      button {
+        width: 100%;
+        height: 50px;
+        background-color:rgba(0, 0, 0, 0.2);
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 2rem;
+        text-align: left;
+        padding-left: 20px;
+        &:hover {
+          cursor: pointer;
+          opacity: 0.5;
+        }
       }
     }
   }
 
   div#lobby-action {
     padding: 20px;
+    overflow-y: auto;
+    min-height: 100vh;
 
     table {
       width: 100%;
       border-collapse: collapse;
+      background-color: rgba(0,0,0,0.45); 
     }
 
     table th, table td {
+      padding: 5px;
+    }
+
+    table th {
       font-size: 2rem;
-      color: white;
-      border: 1px solid white;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    table td {
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.8);
     }
 
     table tfoot {

@@ -18,6 +18,7 @@ export default function HomeComponent() {
       <div id="web-game-mode">
         <img onClick={Redirect.toRoom} src="assets/home_mode_player.png" />
         <img onClick={Redirect.toBotBoard} src="assets/home_mode_bot.png" />
+        <img src="assets/home_mode_puzzles.png" />
       </div>
     </div>
   );

@@ -11,46 +11,36 @@ export default function LobbyComponent() {
   return (
     <div id="web-lobby">
       <div id="user-action">
-        <input type="text" value="player" />
-        <button onClick={Redirect.toRoom}>Refresh</button>
-        <button onClick={Redirect.toPlayerBoard}>Quick Join</button>
-        <button onClick={createRoom}>Create room</button>
-        <button onClick={Redirect.toHome}>Back to home screen</button>
-        <button onClick={Redirect.toTest}>test</button>
+        <div id="user-menu">
+          <input type="text" placeholder="enter your ingame" />
+          <button onClick={Redirect.toRoom}>Refresh</button>
+          <button onClick={createRoom}>Create room</button>
+          <button onClick={Redirect.toHome}>Back to home screen</button>
+          <button onClick={Redirect.toTest}>test</button>
+        </div>
       </div>
-      <div id="lobby-action">
+      <div id="lobby-action" style={{}}>
         <table>
           <thead>
             <tr>
-              <th>Host name</th>
-              <th>Player</th>
-              <th>On progress</th>
+              <th style={{ textAlign: "left" }}>Host name</th>
+              <th style={{ textAlign: "center" }}>Status</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>dong</td>
-              <td>2</td>
-              <td>Battle</td>
-              <td>
-                <a onClick={Redirect.toPlayerBoard}>Join</a>
-              </td>
-            </tr>
-            <tr>
-              <td>nipponwfm</td>
-              <td>1</td>
-              <td>Waiting</td>
-              <td>
-                <a onClick={Redirect.toPlayerBoard}>Join</a>
-              </td>
-            </tr>
+            {[1].map((e) => {
+              return (
+                <tr>
+                  <td style={{ textAlign: "left" }}>dong</td>
+                  <td style={{ textAlign: "center" }}>Battle</td>
+                  <td style={{ textAlign: "center" }}>
+                    <a onClick={Redirect.toPlayerBoard}>Join</a>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={4}>{`[1] [2] [3] [4]`}</td>
-            </tr>
-          </tfoot>
         </table>
       </div>
     </div>
