@@ -208,6 +208,12 @@ export default function BoardComponent({
   }, [side]);
 
   function highLightSelectedCell(event: any) {
+    // document.addEventListener("mousemove", (e) => {
+    //   console.log(e.pageY, e.pageX);
+    //   (event.target as HTMLElement).style.position = "fixed";
+    //   (event.target as HTMLElement).style.top = `${e.pageY}px`;
+    //   (event.target as HTMLElement).style.left = `${e.pageX}px`;
+    // })
     if (event.target.src.includes("empty")) {
       event.preventDefault();
       return;
@@ -247,7 +253,7 @@ export default function BoardComponent({
   }
 
   function unHighLightMovePoint() {
-    document.querySelectorAll(".active, .active-enemy").forEach((elem) => {
+    document.querySelectorAll(".move-point.active, .active-enemy").forEach((elem) => {
       elem.classList.remove("active", "active-enemy");
     });
   }

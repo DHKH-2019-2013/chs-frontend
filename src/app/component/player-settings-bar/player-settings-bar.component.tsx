@@ -46,14 +46,22 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
   }
 
   function switchTab(tabName: string) {
+    // remove previous style
     const $tabs = document.querySelectorAll(".player-settings-tab");
     $tabs.forEach((elem: any) => {
       elem.style.display = "none";
+      (event.target as HTMLElement).classList.remove("active");
     });
+    const $button = document.querySelectorAll("#player-settings-tabs-container button")
+    $button.forEach((elem: any) => {
+      elem.classList.remove("active")
+    })
 
+    // set style to new one
     let displayStyle = "block";
     if (tabName === "player-settings-main") displayStyle = "grid";
     document.getElementById(tabName).style.display = displayStyle;
+    (event.target as HTMLElement).classList.add("active");
   }
 
   return (
@@ -63,6 +71,7 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
           onClick={() => {
             switchTab("player-settings-main");
           }}
+          className="active"
         >
           Main
         </button>

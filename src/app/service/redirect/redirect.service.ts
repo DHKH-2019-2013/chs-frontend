@@ -1,5 +1,3 @@
-import { socket } from "../socket/socket.service";
-
 export class Redirect {
   static toHome() {
     location.href = "/";
@@ -19,9 +17,5 @@ export class Redirect {
 
   static toNewRoom(roomId: string, playerName: string) {
     location.href = `/player?roomId=${roomId}&name=${playerName}`;
-  }
-
-  static toTest() {
-    socket.emit("test");
   }
 }

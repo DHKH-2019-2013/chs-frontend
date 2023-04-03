@@ -76,5 +76,13 @@ div#web-lobby {
         cursor: pointer;
       }
     }
+
+    td.label-status-battle {
+      color: red;
+    }
+
+    td.label-status-waiting {
+      color: rgb(61, 183, 61);
+    }
   }
 }

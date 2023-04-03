@@ -6,9 +6,10 @@ div#bot-settings-bar {
   width: calc($size-chess * 8);
   height: calc($size-chess * 8);
   background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
 
   #bot-settings-bar-difficulty {
+    padding: 5px;
+
     h3 {
       color: white;
       font-size: 2.0rem;
@@ -21,24 +22,25 @@ div#bot-settings-bar {
       button {
         width: 100%;
         padding: 10px 0px;
-        border-radius: 5px;
+        border-radius: 2px;
       
         &:hover {
-          background-color: gray;
+          background-color: rgba(209, 199, 199, 0.9);
           cursor: pointer;
         }
         
         &.difficulty-active {
-          background-color: rgb(134, 123, 123);
+          background-color: rgb(87, 74, 74);
         }
       }
     }
   }
 
   #bot-settings-bar-history {
-    background-color: gray;
-    overflow-y: scroll;
+    background-color: rgba(74, 68, 68, 0.657);
+    overflow-y: auto;
     padding: 0px 15px;
+    margin-top: 5px;
 
     div {
       &.right {
@@ -48,7 +50,7 @@ div#bot-settings-bar {
 
       .bubble-message {
         display: block;
-        background-color: rgb(129, 129, 232);
+        background-color: rgb(141, 217, 90);
         font-size: 1.5rem;
         padding: 10px;
         margin: 10px 0px;

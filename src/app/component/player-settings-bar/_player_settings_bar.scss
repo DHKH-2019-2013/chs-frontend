@@ -2,6 +2,10 @@ div#player-settings-bar {
   width: calc($size-chess * 8);
   background-color: rgba(0, 0, 0, 0.5);
   
+  * {
+    font-size: 1.6rem;
+  }
+
   div#player-settings-tabs-container {
     height: $size-player-settings-tabs-container;
     width: 100%;
@@ -12,8 +16,12 @@ div#player-settings-bar {
       padding: 10px;
 
       &:hover {
-        background-color: rgb(87, 74, 74);
+        background-color: rgba(209, 199, 199, 0.9);
         cursor: pointer;
+      }
+
+      &.active {
+        background-color: rgb(87, 74, 74);
       }
     }
   }
@@ -28,7 +36,7 @@ div#player-settings-bar {
     background-color: rgba(0, 0, 0, 0.5);
   
     #player-settings-main-message-display {
-      background-color: gray;
+      background-color: rgba(74, 68, 68, 0.657);
       overflow-y: scroll;
       padding: 0px 15px;
   
@@ -40,7 +48,7 @@ div#player-settings-bar {
   
         .bubble-message {
           display: block;
-          background-color: rgb(129, 129, 232);
+          background-color: rgb(141, 217, 90);
           font-size: 1.5rem;
           padding: 10px;
           margin: 10px 0px;
@@ -56,14 +64,16 @@ div#player-settings-bar {
       display: grid;
       grid-template-columns: 80% 20%;
       grid-gap: 5px;
-      
-      // input[type="text"] {}
-  
+
+      input[type="text"] {
+        padding-left: 5px;
+      }
+
       input[type="button"] {
         width: 100%;
         padding: 10px 0px;
         border-radius: 5px;
-      
+
         &:hover {
           background-color: gray;
           cursor: pointer;
@@ -73,12 +83,12 @@ div#player-settings-bar {
   }
   
   div#player-settings-list {
-    background-color: gray;
+    background-color: rgba(74, 68, 68, 0.657);
     height: calc($size-chess * 8 - $size-player-settings-tabs-container);
   }
 
   div#player-settings-action {
-    background-color: gray;
+    background-color: rgba(74, 68, 68, 0.657);
     height: calc($size-chess * 8 - $size-player-settings-tabs-container);
   }
 
@@ -90,10 +100,13 @@ div#player-settings-bar {
       padding: 10px 0px;
       font-size: 2rem;
       text-align: center;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.165);
+      margin-bottom: 1px;
     }
 
     li:hover {
-      background-color: rgba(48, 39, 39, 0.7);
+      background-color: rgba(65, 65, 65, 0.7);
       cursor: pointer;
     }
   }
