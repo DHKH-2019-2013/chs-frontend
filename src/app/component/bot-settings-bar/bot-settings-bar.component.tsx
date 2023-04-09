@@ -39,10 +39,10 @@ export default function BotSettingsBarComponent() {
       <div id="bot-settings-bar-difficulty">
         <h3>Difficulty</h3>
         <div id="difficulty-list">
-          <button>Easy</button>
-          <button className="difficulty-active">Medium</button>
-          <button>Hard</button>
-          <button>Expert</button>
+          <button data-intelligence={2}>Easy</button>
+          <button data-intelligence={5} className="difficulty-active">Medium</button>
+          <button data-intelligence={10}>Hard</button>
+          <button data-intelligence={15}>Expert</button>
         </div>
       </div>
       <div id="bot-settings-bar-history">

@@ -52,6 +52,12 @@ div#web-main-intro {
         transform: scale(1.05, 1.05);
         cursor: pointer;
       }
+
+      &:nth-child(3) {
+        opacity: 0.1;
+        transform: initial;
+        cursor: not-allowed;
+      }
     }
   }
 }

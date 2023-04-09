@@ -14,12 +14,6 @@ export default function PlayerRoomComponent() {
   const [isReady, setReady] = useState(false);
 
   useEffect(() => {
-    document.getElementById("web-player-room").style.transform = `scale(${
-      document.querySelector("body").offsetWidth / 1600
-    })`;
-  });
-
-  useEffect(() => {
     socket.on("start-match", async ({ side }) => {
       setSide(side);
       setReady(true);

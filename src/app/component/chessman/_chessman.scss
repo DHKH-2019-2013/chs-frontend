@@ -3,28 +3,25 @@ div.chessman-container {
   width: fit-content;
   width: $size-chess;
   height: $size-chess;
+
+  &.selected {
+    background-color: rgba(255, 255, 0, 0.5);
+    z-index: 2
+  }
+
+  &.is-check-mate {
+    background-color: rgb(255, 0, 0);
+  }
+
+  &.pointing {
+    border: 7px solid rgba(255, 255, 255, 0.5);
+  }
+
   img {
     &.chessman {
       display: inline-block;
       width: $size-chess;
       height: $size-chess;
-
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-      }
-    
-      &.pointing {
-        border: 7px solid rgba(255, 255, 255, 0.5);
-      }
-    
-      &.selected {
-        background-color: rgba(255, 255, 0, 0.5);
-      }
-
-      &.is-check-mate {
-        background-color: rgb(255, 0, 0);
-      }
     }
   }
 
@@ -38,7 +35,7 @@ div.chessman-container {
     border-radius: 50%;
     transform: translate(50%, 50%) scale(0.6, 0.6);
     background-color: rgba(0, 0, 0, 0.2);
-    pointer-events:none;
+    pointer-events: none;
   }
 
   & .move-point.active-enemy {

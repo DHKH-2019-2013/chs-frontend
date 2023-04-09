@@ -16,12 +16,6 @@ export default function BotRoomComponent() {
     })();
   });
 
-  useEffect(() => {
-    document.getElementById("web-bot-room").style.transform = `scale(${
-      document.querySelector("body").offsetWidth / 1600
-    })`;
-  });
-
   function setBoardFen(fen: string) {
     board.current.setFen(fen);
   }
@@ -37,9 +31,7 @@ export default function BotRoomComponent() {
         getBoardFen={getBoardFen}
         setBoardFen={setBoardFen}
         side={true}
-        getSide={() => {
-          return true;
-        }}
+        getSide={() => true}
         gameMode={GameMode.PVE}
       />
       <BotSettingsBarComponent />

@@ -126,10 +126,15 @@ export default function BoardComponent({
   }
 
   async function moveChessmanByBot(playerMove: PlayerMoveInfo) {
+    const difficulty = (
+      document.querySelector(
+        "#bot-settings-bar #bot-settings-bar-difficulty #difficulty-list button.difficulty-active"
+      ) as HTMLElement
+    ).getAttribute("data-intelligence");
     const params: GetBotMoveParams = {
       fen: getBoardFen(),
       move: playerMove.move,
-      int: String(INTELIGENCE),
+      int: difficulty ?? String(INTELIGENCE),
     };
     const response: GetBotMoveResponse = await HttpRestClientConfig.getBotMove(params);
 
@@ -208,12 +213,6 @@ export default function BoardComponent({
   }, [side]);
 
   function highLightSelectedCell(event: any) {
-    // document.addEventListener("mousemove", (e) => {
-    //   console.log(e.pageY, e.pageX);
-    //   (event.target as HTMLElement).style.position = "fixed";
-    //   (event.target as HTMLElement).style.top = `${e.pageY}px`;
-    //   (event.target as HTMLElement).style.left = `${e.pageX}px`;
-    // })
     if (event.target.src.includes("empty")) {
       event.preventDefault();
       return;
@@ -221,9 +220,9 @@ export default function BoardComponent({
 
     if (event.type === "click") {
       if (document.querySelector(".selected")?.id !== event.target.id) unHighLightSelectedCell();
-      event.target.classList.toggle("selected");
+      event.target.parentNode.classList.toggle("selected");
     }
-    if (event.type === "dragstart") event.target.classList.add("selected");
+    if (event.type === "dragstart") event.target.parentNode.classList.add("selected");
 
     displayChessmanMovePoint(event);
   }
@@ -233,7 +232,7 @@ export default function BoardComponent({
     unHighLightMovePoint();
 
     // set new move point
-    if (event.target.classList.contains("selected")) {
+    if (event.target.parentNode.classList.contains("selected")) {
       const movePointContainer = getChessmanMove(event.target.id);
       for (const point of movePointContainer) {
         if (
@@ -273,11 +272,14 @@ export default function BoardComponent({
     let code = "";
     if (isYourMove) code = getSide() ? "_k" : "K";
     else code = getSide() ? "K" : "_k";
-    if (isCheckmate) document.querySelector(`img[src='assets/${code}.png']`).classList.add("is-check-mate");
+    if (isCheckmate)
+      (document.querySelector(`img[src='assets/${code}.png']`).parentNode as HTMLElement).classList.add(
+        "is-check-mate"
+      );
     else {
       document
         .querySelectorAll("img[src='assets/K.png'], img[src='assets/_k.png']")
-        .forEach((king) => king.classList.remove("is-check-mate"));
+        .forEach((king) => (king.parentNode as HTMLElement).classList.remove("is-check-mate"));
     }
   }
 
