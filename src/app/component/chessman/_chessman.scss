@@ -14,7 +14,7 @@ div.chessman-container {
   }
 
   &.pointing {
-    border: 7px solid rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0px 0px 0px 7px rgba(255, 255, 255, 0.5);
   }
 
   img {
