@@ -394,4 +394,8 @@ div#web-lobby div#lobby-action td.label-status-battle {
 }
 div#web-lobby div#lobby-action td.label-status-waiting {
   color: rgb(61, 183, 61);
+}
+div#web-lobby div#lobby-action td a.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }/*# sourceMappingURL=style.css.map */

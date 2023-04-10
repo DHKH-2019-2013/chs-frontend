@@ -84,5 +84,10 @@ div#web-lobby {
     td.label-status-waiting {
       color: rgb(61, 183, 61);
     }
+
+    td a.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
 }

@@ -7,8 +7,8 @@ export class Redirect {
     location.href = "/lobby";
   }
 
-  static toPlayerBoard() {
-    location.href = "/player";
+  static toPlayerBoard(roomId: string, name: string) {
+    location.href = `/player?roomId=${roomId}&name=${name}`;
   }
 
   static toBotBoard() {
