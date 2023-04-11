@@ -87,6 +87,63 @@ export default function BoardComponent({
     return { isCastling: false };
   }
 
+  function handlePlayerCastling(currentPos: string, nextPos: string): CastlingResult {
+    console.log(currentPos, nextPos);
+    if (["K", "k"].includes(board[currentPos].object.get().code)) {
+      if (currentPos === "e8" && nextPos === "g8") {
+        return {
+          isCastling: true,
+          king: {
+            currentPos: "e8",
+            nextPos: "g8",
+          },
+          rider: {
+            currentPos: "h8",
+            nextPos: "f8",
+          },
+        };
+      } else if (currentPos === "e8" && nextPos === "c8") {
+        return {
+          isCastling: true,
+          king: {
+            currentPos: "e8",
+            nextPos: "c8",
+          },
+          rider: {
+            currentPos: "a8",
+            nextPos: "d8",
+          },
+        };
+      } else if (currentPos === "e1" && nextPos === "g1") {
+        return {
+          isCastling: true,
+          king: {
+            currentPos: "e1",
+            nextPos: "g1",
+          },
+          rider: {
+            currentPos: "h1",
+            nextPos: "f1",
+          },
+        };
+      } else if (currentPos === "e1" && nextPos === "c1") {
+        return {
+          isCastling: true,
+          king: {
+            currentPos: "e1",
+            nextPos: "c1",
+          },
+          rider: {
+            currentPos: "a1",
+            nextPos: "d1",
+          },
+        };
+      }
+    }
+
+    return { isCastling: false };
+  }
+
   function isGameOver(isGameOver: boolean, object: string) {
     if (isGameOver) {
       switch (object) {
@@ -117,7 +174,13 @@ export default function BoardComponent({
 
     const currentPos = anotherPlayerMove.move.slice(0, 2);
     const nextPos = anotherPlayerMove.move.slice(2, 4);
-    updateBoardChessman(currentPos, nextPos);
+
+    // handle castle
+    const _result: CastlingResult = handlePlayerCastling(currentPos, nextPos);
+    if (_result.isCastling) {
+      updateBoardChessman(_result.king.currentPos, _result.king.nextPos);
+      updateBoardChessman(_result.rider.currentPos, _result.rider.nextPos);
+    } else updateBoardChessman(currentPos, nextPos);
 
     // trigger board re-render
     forceUpdate();
@@ -175,7 +238,13 @@ export default function BoardComponent({
       const result: CheckValidMoveResponse = await HttpRestClientConfig.checkValidMove(params);
       if (!result.isValidMove) return;
 
-      updateBoardChessman(currentPos, nextPos);
+      // handle castle
+      const _result: CastlingResult = handlePlayerCastling(currentPos, nextPos);
+      if (_result.isCastling) {
+        updateBoardChessman(_result.king.currentPos, _result.king.nextPos);
+        updateBoardChessman(_result.rider.currentPos, _result.rider.nextPos);
+      } else updateBoardChessman(currentPos, nextPos);
+
       if (gameMode === GameMode.PVP) setBoardFen(result.fen);
 
       // final

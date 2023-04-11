@@ -47,6 +47,8 @@ export class King extends Chessman {
     _code = getCode(indexColumn - 1, indexRow - 1);
     if (Board.checkMove(boardData, _code, this.getSide()).isMoveAble) moveContainer.push(_code);
 
+    // castle
+    // TODO: add move point to castle
     return moveContainer;
   }
 }
