@@ -221,7 +221,6 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     board[nextPos].object = board[currentPos].object;
     if (promotionUnit) {
       const currentInfo = board[currentPos].object.get();
-      console.log(currentInfo);
       const newCode = currentInfo.side ? `${promotionUnit.toUpperCase()}` : `${promotionUnit.toLowerCase()}`;
       const promotionUnitUrl = Object.values(CHESSMAN_ASSET_URL).find((e) => e.includes(`${newCode}.png`));
 
@@ -443,7 +442,9 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
 
   function toggleCheckmate(isCheckmate: boolean) {
     if (isCheckmate) {
-      let code = side ? "_k" : "K";
+      const fen = getBoardFen();
+      let code = fen.search(" b ") > -1 ? "_k" : "K";
+      console.log(fen, code);
       (document.querySelector(`img[src='assets/${code}.png']`).parentNode as HTMLElement).classList.add(
         "is-check-mate"
       );
