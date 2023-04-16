@@ -47,7 +47,7 @@ export class Board {
   private url: string = "";
   private data: Record<string, Position> = {}; //hashMap
 
-  constructor(fen: string = "", turn: boolean = false, side: boolean = true, url: string = "") {
+  constructor(fen: string = INITIAL_FEN, turn: boolean = false, side: boolean = true, url: string = "") {
     this.setFen(fen);
     this.setTurn(turn);
     this.setSide(side);

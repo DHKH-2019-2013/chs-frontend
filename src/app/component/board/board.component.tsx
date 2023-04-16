@@ -278,7 +278,7 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     ).getAttribute("data-intelligence");
     const params: GetBotMoveParams = {
       fen: getBoardFen(),
-      move: playerMove.move,
+      move: playerMove.move + (playerMove.promotionUnit ?? ""),
       int: difficulty ?? String(INTELIGENCE),
     };
     const response: GetBotMoveResponse = await HttpRestClientConfig.getBotMove(params);
@@ -286,19 +286,20 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     setBoardFen(response.fen);
     const currentPos = response.move.slice(0, 2);
     const nextPos = response.move.slice(2, 4);
+    const promotionUnit = response.move.slice(4, 5);
 
     // handle castle
     const _castlingResult: CastlingResult = handleCastling(currentPos, nextPos);
     if (_castlingResult.isCastling) {
       updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos);
       updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos);
-    } else updateBoardChessman(currentPos, nextPos);
+    } else updateBoardChessman(currentPos, nextPos, promotionUnit);
 
     // trigger board re-render
     forceUpdate();
     sendMessageInBotRoom(`bot move from ${currentPos} to ${nextPos}`, false);
     toggleDisableMoveCursor(false);
-    toggleCheckmate(response.isCheckmate);
+    toggleCheckmate(response.isCheckmate, true);
     isGameOver(response.isGameOver, "bot");
   }
 
@@ -440,11 +441,20 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     });
   }
 
-  function toggleCheckmate(isCheckmate: boolean) {
+  function toggleCheckmate(isCheckmate: boolean, isBotCheckMate: boolean = false) {
     if (isCheckmate) {
       const fen = getBoardFen();
-      let code = fen.search(" b ") > -1 ? "_k" : "K";
-      console.log(fen, code);
+      let code = "";
+      switch (gameMode) {
+        case GameMode.PVP: {
+          code = fen.search(" b ") > -1 ? "_k" : "K";
+          break;
+        }
+        case GameMode.PVE: {
+          code = isBotCheckMate ? "K" : "_k";
+          break;
+        }
+      }
       (document.querySelector(`img[src='assets/${code}.png']`).parentNode as HTMLElement).classList.add(
         "is-check-mate"
       );

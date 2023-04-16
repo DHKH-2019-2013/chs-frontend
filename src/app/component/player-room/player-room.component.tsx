@@ -8,7 +8,7 @@ import PlayerSettingsBarComponent from "../player-settings-bar/player-settings-b
 
 export default function PlayerRoomComponent() {
   const params = new URL(location.href).searchParams;
-  const board = useRef(new Board("4k3/6P1/8/8/8/8/1p6/4K3 w - - 0 1"));
+  const board = useRef(new Board());
   const [isReady, setReady] = useState(false);
 
   useEffect(() => {
