@@ -25,7 +25,7 @@ export class Queen extends Chessman {
     }
 
     // down
-    for (let i = indexRow - 1; i >= Board.MAX_ROW; i--) {
+    for (let i = indexRow - 1; i >= Board.MIN_ROW; i--) {
       const code = getCode(indexColumn, i);
       const check = Board.checkMove(boardData, code, this.getSide());
       if (check.isMoveAble) {

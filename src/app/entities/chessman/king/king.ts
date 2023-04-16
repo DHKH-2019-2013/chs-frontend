@@ -48,7 +48,18 @@ export class King extends Chessman {
     if (Board.checkMove(boardData, _code, this.getSide()).isMoveAble) moveContainer.push(_code);
 
     // castle
-    // TODO: add move point to castle
+    if (boardData[currentPosition].object.get().side) {
+      if (boardData["e1"].object.get().code === "K" && boardData["h1"].object.get().code === "R")
+        moveContainer.push("g1");
+      if (boardData["e1"].object.get().code === "K" && boardData["a1"].object.get().code === "R")
+        moveContainer.push("c1");
+    } else {
+      if (boardData["e8"].object.get().code === "k" && boardData["h8"].object.get().code === "r")
+        moveContainer.push("g8");
+      if (boardData["e8"].object.get().code === "k" && boardData["a8"].object.get().code === "r")
+        moveContainer.push("c8");
+    }
+
     return moveContainer;
   }
 }

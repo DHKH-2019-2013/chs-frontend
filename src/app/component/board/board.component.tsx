@@ -64,7 +64,7 @@ export default function BoardComponent({
 
   function handleCastling(currentPos: string, nextPos: string): CastlingResult {
     if (["K", "k"].includes(board[currentPos].object.get().code)) {
-      if (currentPos === "e8" && nextPos === "g8") {
+      if (currentPos === "e8" && (nextPos === "g8" || nextPos === "h8")) {
         return {
           isCastling: true,
           king: {
@@ -76,7 +76,7 @@ export default function BoardComponent({
             nextPos: "f8",
           },
         };
-      } else if (currentPos === "e8" && nextPos === "c8") {
+      } else if (currentPos === "e8" && (nextPos === "c8" || nextPos === "a8")) {
         return {
           isCastling: true,
           king: {
@@ -88,7 +88,7 @@ export default function BoardComponent({
             nextPos: "d8",
           },
         };
-      } else if (currentPos === "e1" && nextPos === "g1") {
+      } else if (currentPos === "e1" && (nextPos === "g1" || nextPos === "h1")) {
         return {
           isCastling: true,
           king: {
@@ -100,7 +100,7 @@ export default function BoardComponent({
             nextPos: "f1",
           },
         };
-      } else if (currentPos === "e1" && nextPos === "c1") {
+      } else if (currentPos === "e1" && (nextPos === "c1" || nextPos === "a1")) {
         return {
           isCastling: true,
           king: {
@@ -295,6 +295,7 @@ export default function BoardComponent({
 
   // style functions
   useEffect(() => {
+    if (!side) toggleDisableMoveCursor(true);
     document.getElementById("board-container").style.transform = `rotate(${side ? "0deg" : "180deg"})`;
     document.querySelectorAll(".chessman-container").forEach((elem: HTMLElement) => {
       elem.style.transform = `rotate(${side ? "0deg" : "180deg"})`;
