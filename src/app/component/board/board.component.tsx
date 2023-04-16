@@ -413,6 +413,11 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
   }
 
   function displayPromotionBoard(onPromotion: boolean) {
+    if (!side) {
+      const $promotionBoard = document.querySelector("#board-container #promotion-board-container") as HTMLElement;
+      $promotionBoard.classList.add("invert");
+    }
+
     document.getElementById("promotion-board-container").style.display = onPromotion ? "block" : "none";
   }
 
@@ -438,11 +443,7 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
 
   function toggleCheckmate(isCheckmate: boolean) {
     if (isCheckmate) {
-      let code = "";
-      const fen = getBoardFen();
-      if (fen.search(" b ")) code = "_k";
-      else code = "K";
-
+      let code = side ? "_k" : "K";
       (document.querySelector(`img[src='assets/${code}.png']`).parentNode as HTMLElement).classList.add(
         "is-check-mate"
       );
