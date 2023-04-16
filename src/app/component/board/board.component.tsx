@@ -20,16 +20,13 @@ import {
   PromotionResult,
 } from "./board.component.i";
 import PromotionBoardComponent from "../promotion-board/promotion-board.component";
+import { Rider } from "../../entities/chessman/rider/rider";
+import { Knight } from "../../entities/chessman/knight/knight";
+import { Bishop } from "../../entities/chessman/bishop/bishop";
+import { Queen } from "../../entities/chessman/queen/queen";
+import { Pawn } from "../../entities/chessman/pawn/pawn";
 
-export default function BoardComponent({
-  roomId,
-  board,
-  getBoardFen,
-  setBoardFen,
-  side,
-  getSide,
-  gameMode,
-}: BoardProps) {
+export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen, side, gameMode }: BoardProps) {
   const [change, setChange] = useState(1);
   const [playerMove, setPlayerMove] = useState<PlayerMoveInfo>({ move: "", isCheckmate: false });
   const [promotionSide, setPromotionSide] = useState(true);
@@ -149,7 +146,7 @@ export default function BoardComponent({
       // disable player mouse
       displayPromotionBoard(false);
       toggleDisableMoveCursor(true);
-      toggleCheckmate(result.isCheckmate, true);
+      toggleCheckmate(result.isCheckmate);
 
       // update player move
       const playerMoveInfo: PlayerMoveInfo = {
@@ -227,7 +224,29 @@ export default function BoardComponent({
       console.log(currentInfo);
       const newCode = currentInfo.side ? `${promotionUnit.toUpperCase()}` : `${promotionUnit.toLowerCase()}`;
       const promotionUnitUrl = Object.values(CHESSMAN_ASSET_URL).find((e) => e.includes(`${newCode}.png`));
-      board[nextPos].object = new Chessman(promotionUnitUrl, currentInfo.side, newCode);
+
+      switch (newCode.toLowerCase()) {
+        case "r": {
+          board[nextPos].object = new Rider(promotionUnitUrl, currentInfo.side, newCode);
+          break;
+        }
+        case "n": {
+          board[nextPos].object = new Knight(promotionUnitUrl, currentInfo.side, newCode);
+          break;
+        }
+        case "b": {
+          board[nextPos].object = new Bishop(promotionUnitUrl, currentInfo.side, newCode);
+          break;
+        }
+        case "q": {
+          board[nextPos].object = new Queen(promotionUnitUrl, currentInfo.side, newCode);
+          break;
+        }
+        case "p": {
+          board[nextPos].object = new Pawn(promotionUnitUrl, currentInfo.side, newCode);
+          break;
+        }
+      }
     }
 
     if (currentPos !== nextPos) board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
@@ -327,7 +346,7 @@ export default function BoardComponent({
 
       // disable player mouse cursor
       toggleDisableMoveCursor(true);
-      toggleCheckmate(result.isCheckmate, true);
+      toggleCheckmate(result.isCheckmate);
 
       // update player move
       const playerMoveInfo: PlayerMoveInfo = {
@@ -417,16 +436,17 @@ export default function BoardComponent({
     });
   }
 
-  function toggleCheckmate(isCheckmate: boolean, isYourMove: boolean = false) {
-    // there is so many place call this method :(
-    let code = "";
-    if (isYourMove) code = getSide() ? "_k" : "K";
-    else code = getSide() ? "K" : "_k";
-    if (isCheckmate)
+  function toggleCheckmate(isCheckmate: boolean) {
+    if (isCheckmate) {
+      let code = "";
+      const fen = getBoardFen();
+      if (fen.search(" b ")) code = "_k";
+      else code = "K";
+
       (document.querySelector(`img[src='assets/${code}.png']`).parentNode as HTMLElement).classList.add(
         "is-check-mate"
       );
-    else {
+    } else {
       document
         .querySelectorAll("img[src='assets/K.png'], img[src='assets/_k.png']")
         .forEach((king) => (king.parentNode as HTMLElement).classList.remove("is-check-mate"));
