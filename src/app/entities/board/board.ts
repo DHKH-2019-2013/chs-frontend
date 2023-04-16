@@ -1,6 +1,12 @@
-import { INITIALIZE_POSITION } from "../../constant/constant";
+import { INITIAL_FEN } from "../../constant/constant";
 import { getCode } from "../../utils/utils";
+import { Bishop } from "../chessman/bishop/bishop";
 import { Chessman } from "../chessman/chessman";
+import { King } from "../chessman/king/king";
+import { Knight } from "../chessman/knight/knight";
+import { Pawn } from "../chessman/pawn/pawn";
+import { Queen } from "../chessman/queen/queen";
+import { Rider } from "../chessman/rider/rider";
 import { BoardInfo, Position } from "./board.i";
 
 export class Board {
@@ -137,7 +143,80 @@ export class Board {
     this.initializeChessmanOnBoard();
   }
 
+  public generateChessmanPosition(fen: string = INITIAL_FEN) {
+    const result: any = {};
+    const data = fen.split(" ")[0].split("/");
+
+    let currentRow = 8;
+    for (const fenRow of data) {
+      let currentColumn = 97; // equal 'a' in char code
+      for (let i = 0; i < fenRow.length; i++) {
+        let chessman = null;
+        switch (fenRow[i]) {
+          case "r": {
+            chessman = new Rider("assets/_r.png", false);
+            break;
+          }
+          case "n": {
+            chessman = new Knight("assets/_n.png", false);
+            break;
+          }
+          case "b": {
+            chessman = new Bishop("assets/_b.png", false);
+            break;
+          }
+          case "q": {
+            chessman = new Queen("assets/_q.png", false);
+            break;
+          }
+          case "k": {
+            chessman = new King("assets/_k.png", false);
+            break;
+          }
+          case "p": {
+            chessman = new Pawn("assets/_p.png", false);
+            break;
+          }
+          case "R": {
+            chessman = new Rider("assets/R.png", true);
+            break;
+          }
+          case "N": {
+            chessman = new Knight("assets/N.png", true);
+            break;
+          }
+          case "B": {
+            chessman = new Bishop("assets/B.png", true);
+            break;
+          }
+          case "Q": {
+            chessman = new Queen("assets/Q.png", true);
+            break;
+          }
+          case "K": {
+            chessman = new King("assets/K.png", true);
+            break;
+          }
+          case "P": {
+            chessman = new Pawn("assets/P.png", true);
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+        if (chessman) result[`${String.fromCharCode(currentColumn)}${currentRow}`] = chessman;
+        if (Boolean(Number(fenRow[i]))) currentColumn = currentColumn + Number(fenRow[i]);
+        else currentColumn++;
+      }
+      currentRow--;
+    }
+    return result;
+  }
+
   public initializeChessmanOnBoard() {
+    // const fen = "8/6P1/8/8/8/8/1p6/8 w - - 0 1";
+    const INITIALIZE_POSITION = this.generateChessmanPosition(); //fen
     for (const key of Object.keys(INITIALIZE_POSITION)) {
       this.data[key].object = INITIALIZE_POSITION[key];
     }

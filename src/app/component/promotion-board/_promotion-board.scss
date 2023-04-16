@@ -1,0 +1,26 @@
+#promotion-board-container {
+  display: none;
+  position: fixed;
+  left: -$size-chess;
+  top: 0px; 
+  //calc($size-chess * 8 / 2 / 2.5)
+  width: $size-chess;
+  height: calc($size-chess * 5);
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 3;
+
+  div {
+    display: block;
+    width: $size-chess;
+    height: $size-chess;
+
+    img {
+      width: 100%;
+      height: 100%;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

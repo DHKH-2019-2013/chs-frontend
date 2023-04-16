@@ -23,6 +23,10 @@ export interface CastlingResult {
   };
 }
 
+export interface PromotionResult {
+  isPromotion: boolean;
+}
+
 export interface PlayerMoveInfo {
   move: string;
   isCheckmate: boolean;

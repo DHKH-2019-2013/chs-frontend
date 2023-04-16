@@ -10,6 +10,12 @@ export default function BotRoomComponent() {
   const board = useRef(new Board());
 
   useEffect(() => {
+    document.getElementById("web-bot-room").style.transform = `scale(${
+      document.querySelector("body").offsetWidth / 1600
+    })`;
+  });
+
+  useEffect(() => {
     (async () => {
       const response: GetInitializeChessBoardResponse = await HttpRestClientConfig.getInitializeChessBoard();
       setBoardFen(response.fen);
