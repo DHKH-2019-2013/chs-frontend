@@ -41,7 +41,7 @@ export class Board {
     return { isEnemy, isMoveAble };
   }
 
-  private fen: string = "";
+  private fen: string = INITIAL_FEN;
   private turn: boolean = false;
   private side: boolean = true;
   private url: string = "";
@@ -143,7 +143,7 @@ export class Board {
     this.initializeChessmanOnBoard();
   }
 
-  public generateChessmanPosition(fen: string = INITIAL_FEN) {
+  public generateChessmanPosition(fen: string) {
     const result: any = {};
     const data = fen.split(" ")[0].split("/");
 
@@ -216,7 +216,7 @@ export class Board {
 
   public initializeChessmanOnBoard() {
     // const fen = "8/6P1/8/8/8/8/1p6/8 w - - 0 1";
-    const INITIALIZE_POSITION = this.generateChessmanPosition(); //fen
+    const INITIALIZE_POSITION = this.generateChessmanPosition(this.fen); //fen
     for (const key of Object.keys(INITIALIZE_POSITION)) {
       this.data[key].object = INITIALIZE_POSITION[key];
     }

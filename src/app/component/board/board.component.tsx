@@ -308,7 +308,7 @@ export default function BoardComponent({
     }
 
     if (event.type === "click") {
-      if (document.querySelector(".selected")?.id !== event.target.id) unHighLightSelectedCell();
+      if (document.querySelector(".selected img")?.id !== event.target.id) unHighLightSelectedCell();
       event.target.parentNode.classList.toggle("selected");
     }
     if (event.type === "dragstart") event.target.parentNode.classList.add("selected");
