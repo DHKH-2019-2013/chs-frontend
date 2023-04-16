@@ -1,13 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { GetInitializeChessBoardResponse } from "../../config/http-rest-client-config/http-rest-client-config.i";
-import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
-import { GameMode } from "../../constant/constant";
+import { GameMode, INITIAL_FEN } from "../../constant/constant";
 import { Board } from "../../entities/board/board";
 import BoardComponent from "../board/board.component";
 import BotSettingsBarComponent from "../bot-settings-bar/bot-settings-bar.component";
 
 export default function BotRoomComponent() {
-  const board = useRef(new Board());
+  const board = useRef(new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
 
   useEffect(() => {
     document.getElementById("web-bot-room").style.transform = `scale(${
@@ -16,10 +14,7 @@ export default function BotRoomComponent() {
   });
 
   useEffect(() => {
-    (async () => {
-      const response: GetInitializeChessBoardResponse = await HttpRestClientConfig.getInitializeChessBoard();
-      setBoardFen(response.fen);
-    })();
+    setBoardFen(board.current.getFen());
   });
 
   function setBoardFen(fen: string) {

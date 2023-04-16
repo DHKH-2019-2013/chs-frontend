@@ -1,7 +1,3 @@
-export interface GetInitializeChessBoardResponse {
-  fen: string;
-}
-
 export interface GetBotMoveParams {
   fen: string;
   move: string;

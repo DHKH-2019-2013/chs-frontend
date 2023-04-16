@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { GetInitializeChessBoardResponse } from "../../config/http-rest-client-config/http-rest-client-config.i";
-import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
 import { joinRoom } from "../../config/socket-client-config/socket-client-config";
-import { GameMode } from "../../constant/constant";
+import { GameMode, INITIAL_FEN } from "../../constant/constant";
 import { Board } from "../../entities/board/board";
 import { socket } from "../../service/socket/socket.service";
 import BoardComponent from "../board/board.component";
@@ -10,7 +8,7 @@ import PlayerSettingsBarComponent from "../player-settings-bar/player-settings-b
 
 export default function PlayerRoomComponent() {
   const params = new URL(location.href).searchParams;
-  const board = useRef(new Board());
+  const board = useRef(new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
   const [isReady, setReady] = useState(false);
 
   useEffect(() => {
@@ -35,12 +33,9 @@ export default function PlayerRoomComponent() {
   });
 
   useEffect(() => {
-    (async () => {
-      if (isReady) {
-        const response: GetInitializeChessBoardResponse = await HttpRestClientConfig.getInitializeChessBoard();
-        setBoardFen(response.fen);
-      }
-    })();
+    if (isReady) {
+      setBoardFen(board.current.getFen());
+    }
   }, [isReady]);
 
   function setBoardFen(fen: string) {
