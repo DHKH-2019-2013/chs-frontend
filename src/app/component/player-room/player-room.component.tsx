@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { joinRoom } from "../../config/socket-client-config/socket-client-config";
-import { GameMode, INITIAL_FEN } from "../../constant/constant";
+import { GameMode } from "../../constant/constant";
 import { Board } from "../../entities/board/board";
 import { socket } from "../../service/socket/socket.service";
 import BoardComponent from "../board/board.component";
@@ -8,14 +8,14 @@ import PlayerSettingsBarComponent from "../player-settings-bar/player-settings-b
 
 export default function PlayerRoomComponent() {
   const params = new URL(location.href).searchParams;
-  const board = useRef(new Board("rq2kbnr/3b3p/ppn1ppp1/2pp2P1/1PP1P3/N2P1N1B/PBQ2P1P/R3K2R w KQkq - 0 1"));
+  const board = useRef(new Board("4k3/6P1/8/8/8/8/1p6/4K3 w - - 0 1"));
   const [isReady, setReady] = useState(false);
 
   useEffect(() => {
     document.getElementById("web-player-room").style.transform = `scale(${
       document.querySelector("body").offsetWidth / 1600
     })`;
-  });
+  }, []);
 
   useEffect(() => {
     socket.on("start-match", async ({ side }) => {

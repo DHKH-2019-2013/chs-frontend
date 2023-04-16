@@ -30,10 +30,12 @@ export interface PromotionResult {
 export interface PlayerMoveInfo {
   move: string;
   isCheckmate: boolean;
+  promotionUnit?: string;
 }
 
 export interface ListenUpdateMoveParams {
   fen: string;
   move: string;
   isCheckmate: boolean;
+  promotionUnit?: string;
 }

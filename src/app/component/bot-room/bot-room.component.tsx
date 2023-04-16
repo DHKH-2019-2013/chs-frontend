@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { GameMode, INITIAL_FEN } from "../../constant/constant";
+import { GameMode } from "../../constant/constant";
 import { Board } from "../../entities/board/board";
 import BoardComponent from "../board/board.component";
 import BotSettingsBarComponent from "../bot-settings-bar/bot-settings-bar.component";
@@ -11,7 +11,7 @@ export default function BotRoomComponent() {
     document.getElementById("web-bot-room").style.transform = `scale(${
       document.querySelector("body").offsetWidth / 1600
     })`;
-  });
+  }, []);
 
   useEffect(() => {
     setBoardFen(board.current.getFen());

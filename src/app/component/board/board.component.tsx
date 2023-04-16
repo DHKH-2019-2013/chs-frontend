@@ -7,7 +7,7 @@ import {
 } from "../../config/http-rest-client-config/http-rest-client-config.i";
 import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
 import { sendPlayerMove } from "../../config/socket-client-config/socket-client-config";
-import { GameMode, INTELIGENCE } from "../../constant/constant";
+import { CHESSMAN_ASSET_URL, GameMode, INTELIGENCE } from "../../constant/constant";
 import { Chessman } from "../../entities/chessman/chessman";
 import { socket } from "../../service/socket/socket.service";
 import { sendMessageInBotRoom } from "../bot-settings-bar/bot-settings-bar.component";
@@ -33,10 +33,11 @@ export default function BoardComponent({
   const [change, setChange] = useState(1);
   const [playerMove, setPlayerMove] = useState<PlayerMoveInfo>({ move: "", isCheckmate: false });
   const [promotionSide, setPromotionSide] = useState(true);
+  const [promotionMovePositionInfo, setPromotionMovePositionInfo] = useState("");
 
   useEffect(() => {
-    socket.on("listen-update-move", ({ fen, move, isCheckmate }: ListenUpdateMoveParams) => {
-      moveChessmanByAnotherPlayer({ fen, move, isCheckmate });
+    socket.on("listen-update-move", ({ fen, move, isCheckmate, promotionUnit }: ListenUpdateMoveParams) => {
+      moveChessmanByAnotherPlayer({ fen, move, isCheckmate, promotionUnit });
     });
   }, []);
 
@@ -45,7 +46,13 @@ export default function BoardComponent({
       if (playerMove?.move) {
         switch (gameMode) {
           case GameMode.PVP: {
-            sendPlayerMove(roomId, getBoardFen(), playerMove.move, playerMove.isCheckmate);
+            sendPlayerMove(
+              roomId,
+              getBoardFen(),
+              playerMove.move,
+              playerMove.isCheckmate,
+              playerMove.promotionUnit
+            );
             break;
           }
           case GameMode.PVE: {
@@ -118,8 +125,55 @@ export default function BoardComponent({
     return { isCastling: false };
   }
 
-  function handlePromotion(nextPos: string): PromotionResult {
-    const code = board[nextPos].object.get().code;
+  async function handlePromotion(event: any) {
+    try {
+      const [currentPos, nextPos] = promotionMovePositionInfo.split(" ");
+      const promotionUnit = event.target.parentNode.className;
+
+      // check if next move is valid
+      const params: CheckValidMoveParams = {
+        fen: getBoardFen(),
+        move: currentPos + nextPos + promotionUnit,
+      };
+      const result: CheckValidMoveResponse = await HttpRestClientConfig.checkValidMove(params);
+      if (!result.isValidMove) return;
+
+      updateBoardChessman(nextPos, nextPos, promotionUnit);
+
+      if (gameMode === GameMode.PVP) setBoardFen(result.fen);
+
+      // final
+      // trigger board re-render
+      forceUpdate();
+
+      // disable player mouse
+      displayPromotionBoard(false);
+      toggleDisableMoveCursor(true);
+      toggleCheckmate(result.isCheckmate, true);
+
+      // update player move
+      const playerMoveInfo: PlayerMoveInfo = {
+        move: currentPos + nextPos,
+        isCheckmate: result.isCheckmate,
+        promotionUnit: promotionUnit,
+      };
+      setPlayerMove(playerMoveInfo);
+
+      // send notification
+      switch (gameMode) {
+        case GameMode.PVE: {
+          sendMessageInBotRoom(`you move from ${currentPos} to ${nextPos}`, true);
+          break;
+        }
+      }
+      isGameOver(result.isGameOver, "you");
+    } catch (e) {
+      // do nothing
+    }
+  }
+
+  function isPromotion(currentPos: string, nextPos: string): PromotionResult {
+    const code = board[currentPos].object.get().code;
     if (code === "P" || code === "p") {
       switch (nextPos[1]) {
         case "8": {
@@ -146,14 +200,6 @@ export default function BoardComponent({
       };
   }
 
-  function waitingPlayerChoosePromotionForPawn(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(1);
-      }, 5000);
-    });
-  }
-
   function isGameOver(isGameOver: boolean, object: string) {
     if (isGameOver) {
       switch (object) {
@@ -173,10 +219,18 @@ export default function BoardComponent({
     return board[currentPos]?.object?.move(board, currentPos);
   }
 
-  function updateBoardChessman(currentPos: string, nextPos: string) {
+  function updateBoardChessman(currentPos: string, nextPos: string, promotionUnit?: string) {
     // update chessman position by swapping
     board[nextPos].object = board[currentPos].object;
-    board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
+    if (promotionUnit) {
+      const currentInfo = board[currentPos].object.get();
+      console.log(currentInfo);
+      const newCode = currentInfo.side ? `${promotionUnit.toUpperCase()}` : `${promotionUnit.toLowerCase()}`;
+      const promotionUnitUrl = Object.values(CHESSMAN_ASSET_URL).find((e) => e.includes(`${newCode}.png`));
+      board[nextPos].object = new Chessman(promotionUnitUrl, currentInfo.side, newCode);
+    }
+
+    if (currentPos !== nextPos) board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
   }
 
   async function moveChessmanByAnotherPlayer(anotherPlayerMove: ListenUpdateMoveParams) {
@@ -190,7 +244,7 @@ export default function BoardComponent({
     if (_castlingResult.isCastling) {
       updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos);
       updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos);
-    } else updateBoardChessman(currentPos, nextPos);
+    } else updateBoardChessman(currentPos, nextPos, anotherPlayerMove.promotionUnit);
 
     // trigger board re-render
     forceUpdate();
@@ -240,6 +294,16 @@ export default function BoardComponent({
       // check chessman is my side
       if (board[currentPos].object?.get().side !== side) return new Error("Not your chessman");
 
+      // handle promotion
+      const _promotionResult: PromotionResult = isPromotion(currentPos, nextPos);
+      if (_promotionResult.isPromotion) {
+        updateBoardChessman(currentPos, nextPos);
+        setPromotionMovePositionInfo(`${currentPos} ${nextPos}`);
+        displayPromotionBoard(true);
+        forceUpdate();
+        return;
+      }
+
       // check if next move is valid
       const params: CheckValidMoveParams = {
         fen: getBoardFen(),
@@ -264,14 +328,6 @@ export default function BoardComponent({
       // disable player mouse cursor
       toggleDisableMoveCursor(true);
       toggleCheckmate(result.isCheckmate, true);
-
-      // handle promotion
-      const _promotionResult: PromotionResult = handlePromotion(nextPos);
-      if (_promotionResult.isPromotion) {
-        displayPromotionBoard();
-        await waitingPlayerChoosePromotionForPawn();
-        return;
-      }
 
       // update player move
       const playerMoveInfo: PlayerMoveInfo = {
@@ -337,8 +393,8 @@ export default function BoardComponent({
     }
   }
 
-  function displayPromotionBoard() {
-    document.getElementById("promotion-board-container").style.display = "block";
+  function displayPromotionBoard(onPromotion: boolean) {
+    document.getElementById("promotion-board-container").style.display = onPromotion ? "block" : "none";
   }
 
   function unHighLightSelectedCell() {
@@ -379,7 +435,7 @@ export default function BoardComponent({
 
   return (
     <div id="board-container">
-      <PromotionBoardComponent side={promotionSide} />
+      <PromotionBoardComponent handlePromotion={handlePromotion} side={promotionSide} />
       <img id="board" src="assets/board.png" alt="chess-board" />
       {Object.keys(board).map((key) => {
         return (

@@ -1,4 +1,4 @@
-import { INITIAL_FEN } from "../../constant/constant";
+import { CHESSMAN_ASSET_URL, INITIAL_FEN } from "../../constant/constant";
 import { getCode } from "../../utils/utils";
 import { Bishop } from "../chessman/bishop/bishop";
 import { Chessman } from "../chessman/chessman";
@@ -154,51 +154,51 @@ export class Board {
         let chessman = null;
         switch (fenRow[i]) {
           case "r": {
-            chessman = new Rider("assets/_r.png", false);
+            chessman = new Rider(CHESSMAN_ASSET_URL.BLACK_RIDER, false);
             break;
           }
           case "n": {
-            chessman = new Knight("assets/_n.png", false);
+            chessman = new Knight(CHESSMAN_ASSET_URL.BLACK_KNIGHT, false);
             break;
           }
           case "b": {
-            chessman = new Bishop("assets/_b.png", false);
+            chessman = new Bishop(CHESSMAN_ASSET_URL.BLACK_BISHOP, false);
             break;
           }
           case "q": {
-            chessman = new Queen("assets/_q.png", false);
+            chessman = new Queen(CHESSMAN_ASSET_URL.BLACK_QUEEN, false);
             break;
           }
           case "k": {
-            chessman = new King("assets/_k.png", false);
+            chessman = new King(CHESSMAN_ASSET_URL.BLACK_KING, false);
             break;
           }
           case "p": {
-            chessman = new Pawn("assets/_p.png", false);
+            chessman = new Pawn(CHESSMAN_ASSET_URL.BLACK_PAWN, false);
             break;
           }
           case "R": {
-            chessman = new Rider("assets/R.png", true);
+            chessman = new Rider(CHESSMAN_ASSET_URL.WHITE_RIDER, true);
             break;
           }
           case "N": {
-            chessman = new Knight("assets/N.png", true);
+            chessman = new Knight(CHESSMAN_ASSET_URL.WHITE_KNIGHT, true);
             break;
           }
           case "B": {
-            chessman = new Bishop("assets/B.png", true);
+            chessman = new Bishop(CHESSMAN_ASSET_URL.WHITE_BISHOP, true);
             break;
           }
           case "Q": {
-            chessman = new Queen("assets/Q.png", true);
+            chessman = new Queen(CHESSMAN_ASSET_URL.WHITE_QUEEN, true);
             break;
           }
           case "K": {
-            chessman = new King("assets/K.png", true);
+            chessman = new King(CHESSMAN_ASSET_URL.WHITE_KING, true);
             break;
           }
           case "P": {
-            chessman = new Pawn("assets/P.png", true);
+            chessman = new Pawn(CHESSMAN_ASSET_URL.WHITE_PAWN, true);
             break;
           }
           default: {
@@ -215,8 +215,7 @@ export class Board {
   }
 
   public initializeChessmanOnBoard() {
-    // const fen = "8/6P1/8/8/8/8/1p6/8 w - - 0 1";
-    const INITIALIZE_POSITION = this.generateChessmanPosition(this.fen); //fen
+    const INITIALIZE_POSITION = this.generateChessmanPosition(this.fen);
     for (const key of Object.keys(INITIALIZE_POSITION)) {
       this.data[key].object = INITIALIZE_POSITION[key];
     }

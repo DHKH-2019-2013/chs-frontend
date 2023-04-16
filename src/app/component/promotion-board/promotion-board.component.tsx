@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { PromotionBoardProps } from "./promotion-board.component.i";
+import {
+  ChessManContainer,
+  BLACK_PROMOTION_CONTAINERS,
+  PromotionBoardProps,
+  WHITE_PROMOTION_CONTAINERS,
+} from "./promotion-board.component.i";
 
-export default function PromotionBoardComponent({ side }: PromotionBoardProps) {
-  const [promotionContainer, setPromotionContainer] = useState([]);
+export default function PromotionBoardComponent({ side, handlePromotion }: PromotionBoardProps) {
+  const [promotionContainer, setPromotionContainer] = useState<ChessManContainer>([]);
 
-  const whitePromotionContainers = [
-    "assets/R.png",
-    "assets/N.png",
-    "assets/B.png",
-    "assets/Q.png",
-    "assets/P.png",
-  ];
-  const blackPromotionContainers = [
-    "assets/_r.png",
-    "assets/_n.png",
-    "assets/_b.png",
-    "assets/_q.png",
-    "assets/_p.png",
-  ];
+  const whitePromotionContainers = WHITE_PROMOTION_CONTAINERS;
+  const blackPromotionContainers = BLACK_PROMOTION_CONTAINERS;
 
   useEffect(() => {
     setPromotionContainer(side ? whitePromotionContainers : blackPromotionContainers);
@@ -25,9 +18,9 @@ export default function PromotionBoardComponent({ side }: PromotionBoardProps) {
 
   return (
     <div id="promotion-board-container">
-      {promotionContainer.map((url) => {
+      {promotionContainer.map(({ url, code }) => {
         return (
-          <div key={url}>
+          <div key={url} className={code} onDoubleClick={(event) => handlePromotion(event)}>
             <img src={url} />
           </div>
         );
