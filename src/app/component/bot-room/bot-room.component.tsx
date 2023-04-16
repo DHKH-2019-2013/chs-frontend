@@ -5,7 +5,7 @@ import BoardComponent from "../board/board.component";
 import BotSettingsBarComponent from "../bot-settings-bar/bot-settings-bar.component";
 
 export default function BotRoomComponent() {
-  const board = useRef(new Board("4k3/7P/8/8/8/8/1p6/4K3 w - - 0 1"));
+  const board = useRef(new Board());
 
   useEffect(() => {
     document.getElementById("web-bot-room").style.transform = `scale(${

@@ -89,9 +89,6 @@ div#web-main-intro #web-thumbnail, div#web-main-intro #web-title, div#web-main-i
 div#web-main-intro #web-thumbnail {
   grid-row: 1/3;
 }
-div#web-main-intro #web-thumbnail img {
-  width: 90%;
-}
 div#web-main-intro #web-title {
   color: white;
 }
