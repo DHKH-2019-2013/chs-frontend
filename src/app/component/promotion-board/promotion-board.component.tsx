@@ -21,13 +21,13 @@ export default function PromotionBoardComponent({ side }: PromotionBoardProps) {
 
   useEffect(() => {
     setPromotionContainer(side ? whitePromotionContainers : blackPromotionContainers);
-  });
+  }, [side]);
 
   return (
     <div id="promotion-board-container">
       {promotionContainer.map((url) => {
         return (
-          <div>
+          <div key={url}>
             <img src={url} />
           </div>
         );

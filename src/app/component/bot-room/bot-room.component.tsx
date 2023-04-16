@@ -15,7 +15,7 @@ export default function BotRoomComponent() {
 
   useEffect(() => {
     setBoardFen(board.current.getFen());
-  });
+  }, []);
 
   function setBoardFen(fen: string) {
     board.current.setFen(fen);
