@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CheckValidMoveParams,
   CheckValidMoveResponse,
@@ -27,6 +27,7 @@ import { Queen } from "../../entities/chessman/queen/queen";
 import { Pawn } from "../../entities/chessman/pawn/pawn";
 
 export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen, side, gameMode }: BoardProps) {
+  const history = useRef([]);
   const [change, setChange] = useState(1);
   const [playerMove, setPlayerMove] = useState<PlayerMoveInfo>({ move: "", isCheckmate: false });
   const [promotionSide, setPromotionSide] = useState(true);
@@ -213,7 +214,7 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
   }
 
   function getChessmanMove(currentPos: string) {
-    return board[currentPos]?.object?.move(board, currentPos);
+    return board[currentPos]?.object?.move(board, currentPos, history.current);
   }
 
   function updateBoardChessman(currentPos: string, nextPos: string, promotionUnit?: string) {
@@ -249,6 +250,8 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     }
 
     if (currentPos !== nextPos) board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
+
+    setBoardHistory(currentPos + nextPos);
   }
 
   async function moveChessmanByAnotherPlayer(anotherPlayerMove: ListenUpdateMoveParams) {
@@ -366,6 +369,10 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     } catch (e) {
       // do nothing
     }
+  }
+
+  function setBoardHistory(nextMove: string) {
+    history.current = [...history.current, nextMove];
   }
 
   // style functions

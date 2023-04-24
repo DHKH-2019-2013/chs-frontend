@@ -20,7 +20,11 @@ export class Chessman {
     };
   }
 
-  public move(boardData: Record<string, Position>, currentPosition: string): Array<string> {
+  public move(
+    boardData: Record<string, Position>,
+    currentPosition: string,
+    history?: Array<string>
+  ): Array<string> {
     return [];
   }
 
