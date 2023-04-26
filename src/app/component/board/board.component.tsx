@@ -376,14 +376,6 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
   }
 
   // style functions
-  useEffect(() => {
-    if (!side) toggleDisableMoveCursor(true);
-    document.getElementById("board-container").style.transform = `rotate(${side ? "0deg" : "180deg"})`;
-    document.querySelectorAll(".chessman-container").forEach((elem: HTMLElement) => {
-      elem.style.transform = `rotate(${side ? "0deg" : "180deg"})`;
-    });
-  }, [side]);
-
   function highLightSelectedCell(event: any) {
     if (event.target.src.includes("empty")) {
       event.preventDefault();

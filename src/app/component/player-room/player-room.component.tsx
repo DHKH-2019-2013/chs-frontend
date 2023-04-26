@@ -15,10 +15,28 @@ export default function PlayerRoomComponent() {
     document.getElementById("web-player-room").style.transform = `scale(${
       document.querySelector("body").offsetWidth / 1600
     })`;
+
+    (document.querySelector("#board-container") as HTMLElement).style.cursor = "wait";
+    document.querySelectorAll(".chessman").forEach((e: any) => {
+      e.style.pointerEvents = "none";
+    });
   }, []);
 
   useEffect(() => {
     socket.on("start-match", async ({ side }) => {
+      const boardCursor = side ? "initial" : "wait";
+      const chessManCursor = side ? "initial" : "none";
+
+      (document.querySelector("#board-container") as HTMLElement).style.cursor = boardCursor;
+      document.querySelectorAll(".chessman").forEach((e: any) => {
+        e.style.pointerEvents = chessManCursor;
+      });
+
+      document.getElementById("board-container").style.transform = `rotate(${side ? "0deg" : "180deg"})`;
+      document.querySelectorAll(".chessman-container").forEach((elem: HTMLElement) => {
+        elem.style.transform = `rotate(${side ? "0deg" : "180deg"})`;
+      });
+
       setSide(side);
       setReady(true);
     });
