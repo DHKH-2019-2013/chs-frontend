@@ -228,8 +228,7 @@ div#web-player-room div#player-settings-bar {
 #promotion-board-container {
   display: none;
   position: fixed;
-  left: -80px;
-  top: 0px;
+  margin-left: -80px;
   width: 80px;
   height: 400px;
   background-color: rgba(255, 255, 255, 0.1);

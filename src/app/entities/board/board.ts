@@ -206,16 +206,24 @@ export class Board {
           }
         }
         if (chessman) result[`${String.fromCharCode(currentColumn)}${currentRow}`] = chessman;
-        if (Boolean(Number(fenRow[i]))) currentColumn = currentColumn + Number(fenRow[i]);
-        else currentColumn++;
+        if (Boolean(Number(fenRow[i]))) {
+          let temp = currentColumn + Number(fenRow[i]);
+          for (currentColumn; currentColumn < temp; currentColumn++) {
+            result[`${String.fromCharCode(currentColumn)}${currentRow}`] = new Chessman(
+              "assets/empty.png",
+              undefined,
+              undefined
+            );
+          }
+        } else currentColumn++;
       }
       currentRow--;
     }
     return result;
   }
 
-  public initializeChessmanOnBoard() {
-    const INITIALIZE_POSITION = this.generateChessmanPosition(this.fen);
+  public initializeChessmanOnBoard(fen?: string) {
+    const INITIALIZE_POSITION = this.generateChessmanPosition(fen || this.fen);
     for (const key of Object.keys(INITIALIZE_POSITION)) {
       this.data[key].object = INITIALIZE_POSITION[key];
     }

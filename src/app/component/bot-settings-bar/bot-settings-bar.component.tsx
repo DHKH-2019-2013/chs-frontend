@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Redirect } from "../../service/redirect/redirect.service";
+import { BotSettingsBarProps } from "./bot-settings-bar.component.i";
 
 export function sendMessageInBotRoom(systemMessage: string, isYouSend: boolean) {
   systemMessage = systemMessage.trim();
@@ -21,7 +22,7 @@ export function sendMessageInBotRoom(systemMessage: string, isYouSend: boolean) 
   $messageContainer.scrollTop = $messageContainer.scrollHeight;
 }
 
-export default function BotSettingsBarComponent() {
+export default function BotSettingsBarComponent({ toggleChangeBoardHistory }: BotSettingsBarProps) {
   useEffect(() => {
     const $difficultyButtons = document.querySelectorAll("#difficulty-list button");
     $difficultyButtons.forEach((elem) => {
@@ -40,7 +41,9 @@ export default function BotSettingsBarComponent() {
         <h3>Difficulty</h3>
         <div id="difficulty-list">
           <button data-intelligence={2}>Easy</button>
-          <button data-intelligence={5} className="difficulty-active">Medium</button>
+          <button data-intelligence={5} className="difficulty-active">
+            Medium
+          </button>
           <button data-intelligence={10}>Hard</button>
           <button data-intelligence={15}>Expert</button>
         </div>
@@ -52,8 +55,22 @@ export default function BotSettingsBarComponent() {
       </div>
       <div id="bot-settings-bar-action">
         <button onClick={Redirect.toHome}>Back to home screen</button>
-        <button disabled>{"<"} Prev Move</button>
-        <button disabled>Next Move {">"}</button>
+        <button
+          id="prev-move-button"
+          onClick={() => {
+            toggleChangeBoardHistory("prev");
+          }}
+        >
+          {"<"} Prev Move
+        </button>
+        <button
+          id="next-move-button"
+          onClick={() => {
+            toggleChangeBoardHistory("next");
+          }}
+        >
+          Next Move {">"}
+        </button>
         <button onClick={Redirect.toBotBoard}>New Game</button>
       </div>
     </div>

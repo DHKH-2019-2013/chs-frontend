@@ -1,13 +1,16 @@
 import { GameMode } from "../../constant/constant";
 import { Position } from "../../entities/board/board.i";
+import { HistoryCommand } from "../bot-room/bot-room.component.i";
 
 export interface BoardProps {
   roomId?: string;
   board: Record<string, Position>;
   getBoardFen: Function;
   setBoardFen: Function;
-  side?: boolean;
+  side?: boolean; // pvp only
   gameMode: GameMode;
+  historyCommand?: HistoryCommand; //pve only
+  reRenderBoard?: Function; //pve only
 }
 
 export interface CastlingResult {
@@ -37,4 +40,17 @@ export interface ListenUpdateMoveParams {
   move: string;
   isCheckmate: boolean;
   promotionUnit?: string;
+}
+
+export type BoardHistories = Array<{
+  fen: string;
+  isCheckmate: boolean;
+  isBotCheckmate: boolean;
+  move: string;
+}>;
+
+export interface IncomingHistory {
+  fen: string;
+  isCheckmate: boolean;
+  isBotCheckmate: boolean;
 }

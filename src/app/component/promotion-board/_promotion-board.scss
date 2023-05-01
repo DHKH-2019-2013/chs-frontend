@@ -1,8 +1,7 @@
 #promotion-board-container {
   display: none;
   position: fixed;
-  left: -$size-chess;
-  top: 0px; 
+  margin-left: -$size-chess;
   //calc($size-chess * 8 / 2 / 2.5)
   width: $size-chess;
   height: calc($size-chess * 5);

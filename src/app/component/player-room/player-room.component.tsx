@@ -10,6 +10,7 @@ export default function PlayerRoomComponent() {
   const params = new URL(location.href).searchParams;
   const board = useRef(new Board());
   const [isReady, setReady] = useState(false);
+  const [side, setSide] = useState(true);
 
   useEffect(() => {
     document.getElementById("web-player-room").style.transform = `scale(${
@@ -72,14 +73,6 @@ export default function PlayerRoomComponent() {
     return params.get("name");
   }
 
-  function setSide(side: boolean) {
-    board.current.setSide(side);
-  }
-
-  function getSide() {
-    return board.current.getSide();
-  }
-
   return (
     <div id="web-player-room">
       <BoardComponent
@@ -87,7 +80,7 @@ export default function PlayerRoomComponent() {
         board={board.current.getData()}
         getBoardFen={getBoardFen}
         setBoardFen={setBoardFen}
-        side={getSide()}
+        side={side}
         gameMode={GameMode.PVP}
       />
       <PlayerSettingsBarComponent roomId={getRoomId()} />

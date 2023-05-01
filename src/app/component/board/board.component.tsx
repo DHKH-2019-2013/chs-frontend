@@ -13,8 +13,10 @@ import { socket } from "../../service/socket/socket.service";
 import { sendMessageInBotRoom } from "../bot-settings-bar/bot-settings-bar.component";
 import ChessmanComponent from "../chessman/chessman.component";
 import {
+  BoardHistories,
   BoardProps,
   CastlingResult,
+  IncomingHistory,
   ListenUpdateMoveParams,
   PlayerMoveInfo,
   PromotionResult,
@@ -26,8 +28,25 @@ import { Bishop } from "../../entities/chessman/bishop/bishop";
 import { Queen } from "../../entities/chessman/queen/queen";
 import { Pawn } from "../../entities/chessman/pawn/pawn";
 
-export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen, side, gameMode }: BoardProps) {
-  const history = useRef([]);
+export default function BoardComponent({
+  roomId,
+  board,
+  getBoardFen,
+  setBoardFen,
+  side,
+  gameMode,
+  historyCommand,
+  reRenderBoard,
+}: BoardProps) {
+  const histories = useRef<BoardHistories>([
+    {
+      fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      isCheckmate: false,
+      isBotCheckmate: false,
+      move: undefined,
+    },
+  ]);
+  const historyPoiter = useRef<number>(0);
   const [change, setChange] = useState(1);
   const [playerMove, setPlayerMove] = useState<PlayerMoveInfo>({ move: "", isCheckmate: false });
   const [promotionSide, setPromotionSide] = useState(true);
@@ -38,6 +57,8 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
       moveChessmanByAnotherPlayer({ fen, move, isCheckmate, promotionUnit });
     });
   }, []);
+
+  useEffect(() => {}, [side]);
 
   useEffect(() => {
     (async () => {
@@ -61,6 +82,55 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
       }
     })();
   }, [playerMove]);
+
+  useEffect(() => {
+    // when move, clear checkmate
+    if (historyCommand) {
+      switch (historyCommand.type) {
+        case "prev": {
+          historyPoiter.current - 1 >= 0 && (historyPoiter.current = historyPoiter.current - 1);
+          reRenderBoard(histories.current[historyPoiter.current].fen);
+          toggleCheckmate(
+            histories.current[historyPoiter.current].isCheckmate,
+            histories.current[historyPoiter.current].isBotCheckmate
+          );
+          sendMessageInBotRoom("move back", true);
+          forceUpdate();
+          break;
+        }
+        case "next": {
+          let temp = [...histories.current, {} as any] as BoardHistories;
+          historyPoiter.current + 1 < temp.length - 1 && (historyPoiter.current = historyPoiter.current + 1);
+          reRenderBoard(temp[historyPoiter.current].fen);
+          toggleCheckmate(temp[historyPoiter.current].isCheckmate, temp[historyPoiter.current].isBotCheckmate);
+          sendMessageInBotRoom("move next", true);
+          forceUpdate();
+          break;
+        }
+      }
+    }
+  }, [historyCommand]);
+
+  useEffect(() => {
+    const $prevButton = document.querySelector("#prev-move-button");
+    const $nextButton = document.querySelector("#next-move-button");
+
+    if (histories.current.length === 1) {
+      $prevButton.setAttribute("disabled", "");
+      $nextButton.setAttribute("disabled", "");
+    } else {
+      if (historyPoiter.current === histories.current.length - 1) {
+        $prevButton.removeAttribute("disabled");
+        $nextButton.setAttribute("disabled", "");
+      } else if (historyPoiter.current === 0) {
+        $prevButton.setAttribute("disabled", "");
+        $nextButton.removeAttribute("disabled");
+      } else {
+        $prevButton.removeAttribute("disabled");
+        $nextButton.removeAttribute("disabled");
+      }
+    }
+  }, [histories.current, historyCommand]);
 
   // move functions
   function forceUpdate() {
@@ -138,7 +208,7 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
 
       updateBoardChessman(nextPos, nextPos, promotionUnit);
 
-      if (gameMode === GameMode.PVP) setBoardFen(result.fen);
+      setBoardFen(result.fen);
 
       // final
       // trigger board re-render
@@ -214,10 +284,19 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
   }
 
   function getChessmanMove(currentPos: string) {
-    return board[currentPos]?.object?.move(board, currentPos, history.current);
+    return board[currentPos]?.object?.move(
+      board,
+      currentPos,
+      histories.current.filter((history) => history.move).map((history) => history.move)
+    );
   }
 
-  function updateBoardChessman(currentPos: string, nextPos: string, promotionUnit?: string) {
+  function updateBoardChessman(
+    currentPos: string,
+    nextPos: string,
+    promotionUnit?: string,
+    incomingHistory?: IncomingHistory
+  ) {
     // update chessman position by swapping
     board[nextPos].object = board[currentPos].object;
     if (promotionUnit) {
@@ -251,7 +330,7 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
 
     if (currentPos !== nextPos) board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
 
-    setBoardHistory(currentPos + nextPos);
+    setBoardHistory(incomingHistory, currentPos + nextPos);
   }
 
   async function moveChessmanByAnotherPlayer(anotherPlayerMove: ListenUpdateMoveParams) {
@@ -263,9 +342,22 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     // handle castle
     const _castlingResult: CastlingResult = handleCastling(currentPos, nextPos);
     if (_castlingResult.isCastling) {
-      updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos);
-      updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos);
-    } else updateBoardChessman(currentPos, nextPos, anotherPlayerMove.promotionUnit);
+      updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos, undefined, {
+        fen: anotherPlayerMove.fen,
+        isCheckmate: anotherPlayerMove.isCheckmate,
+        isBotCheckmate: false,
+      });
+      updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos, undefined, {
+        fen: anotherPlayerMove.fen,
+        isCheckmate: anotherPlayerMove.isCheckmate,
+        isBotCheckmate: false,
+      });
+    } else
+      updateBoardChessman(currentPos, nextPos, anotherPlayerMove.promotionUnit, {
+        fen: anotherPlayerMove.fen,
+        isCheckmate: anotherPlayerMove.isCheckmate,
+        isBotCheckmate: false,
+      });
 
     // trigger board re-render
     forceUpdate();
@@ -286,7 +378,6 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     };
     const response: GetBotMoveResponse = await HttpRestClientConfig.getBotMove(params);
 
-    setBoardFen(response.fen);
     const currentPos = response.move.slice(0, 2);
     const nextPos = response.move.slice(2, 4);
     const promotionUnit = response.move.slice(4, 5);
@@ -294,11 +385,25 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     // handle castle
     const _castlingResult: CastlingResult = handleCastling(currentPos, nextPos);
     if (_castlingResult.isCastling) {
-      updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos);
-      updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos);
-    } else updateBoardChessman(currentPos, nextPos, promotionUnit);
+      updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos, undefined, {
+        fen: response.fen,
+        isCheckmate: response.isCheckmate,
+        isBotCheckmate: true,
+      });
+      updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos, undefined, {
+        fen: response.fen,
+        isCheckmate: response.isCheckmate,
+        isBotCheckmate: true,
+      });
+    } else
+      updateBoardChessman(currentPos, nextPos, promotionUnit, {
+        fen: response.fen,
+        isCheckmate: response.isCheckmate,
+        isBotCheckmate: true,
+      });
 
     // trigger board re-render
+    setBoardFen(response.fen);
     forceUpdate();
     sendMessageInBotRoom(`bot move from ${currentPos} to ${nextPos}`, false);
     toggleDisableMoveCursor(false);
@@ -312,9 +417,9 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
       const nextPos = document.elementFromPoint(event.clientX, event.clientY).id;
 
       // check if next position is same with previous
-      if (nextPos === currentPos) return new Error("samePosition");
+      if (nextPos === currentPos) throw new Error("samePosition");
       // check chessman is my side
-      if (board[currentPos].object?.get().side !== side) return new Error("Not your chessman");
+      if (board[currentPos].object?.get().side !== side) throw new Error("Not your chessman");
 
       // handle promotion
       const _promotionResult: PromotionResult = isPromotion(currentPos, nextPos);
@@ -337,12 +442,24 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
       // handle castle
       const _castlingResult: CastlingResult = handleCastling(currentPos, nextPos);
       if (_castlingResult.isCastling) {
-        updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos);
-        updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos);
-      } else updateBoardChessman(currentPos, nextPos);
+        updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos, undefined, {
+          fen: result.fen,
+          isCheckmate: result.isCheckmate,
+          isBotCheckmate: false,
+        });
+        updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos, undefined, {
+          fen: result.fen,
+          isCheckmate: result.isCheckmate,
+          isBotCheckmate: false,
+        });
+      } else
+        updateBoardChessman(currentPos, nextPos, undefined, {
+          fen: result.fen,
+          isCheckmate: result.isCheckmate,
+          isBotCheckmate: false,
+        });
 
-      if (gameMode === GameMode.PVP) setBoardFen(result.fen);
-
+      setBoardFen(result.fen);
       // final
       // trigger board re-render
       forceUpdate();
@@ -371,8 +488,17 @@ export default function BoardComponent({ roomId, board, getBoardFen, setBoardFen
     }
   }
 
-  function setBoardHistory(nextMove: string) {
-    history.current = [...history.current, nextMove];
+  function setBoardHistory(incomingHistory: IncomingHistory, nextMove: string) {
+    histories.current = [
+      ...histories.current.slice(0, historyPoiter.current + 1),
+      {
+        fen: incomingHistory.fen,
+        isCheckmate: incomingHistory.isCheckmate,
+        isBotCheckmate: incomingHistory.isBotCheckmate,
+        move: nextMove,
+      },
+    ];
+    historyPoiter.current = histories.current.length - 1;
   }
 
   // style functions
