@@ -27,6 +27,7 @@ import { Knight } from "../../entities/chessman/knight/knight";
 import { Bishop } from "../../entities/chessman/bishop/bishop";
 import { Queen } from "../../entities/chessman/queen/queen";
 import { Pawn } from "../../entities/chessman/pawn/pawn";
+import { sendMessageInPlayerRoom } from "../player-settings-bar/player-settings-bar.component";
 
 export default function BoardComponent({
   roomId,
@@ -112,22 +113,24 @@ export default function BoardComponent({
   }, [historyCommand]);
 
   useEffect(() => {
-    const $prevButton = document.querySelector("#prev-move-button");
-    const $nextButton = document.querySelector("#next-move-button");
+    if (gameMode === GameMode.PVE) {
+      const $prevButton = document.querySelector("#prev-move-button");
+      const $nextButton = document.querySelector("#next-move-button");
 
-    if (histories.current.length === 1) {
-      $prevButton.setAttribute("disabled", "");
-      $nextButton.setAttribute("disabled", "");
-    } else {
-      if (historyPoiter.current === histories.current.length - 1) {
-        $prevButton.removeAttribute("disabled");
-        $nextButton.setAttribute("disabled", "");
-      } else if (historyPoiter.current === 0) {
+      if (histories.current.length === 1) {
         $prevButton.setAttribute("disabled", "");
-        $nextButton.removeAttribute("disabled");
+        $nextButton.setAttribute("disabled", "");
       } else {
-        $prevButton.removeAttribute("disabled");
-        $nextButton.removeAttribute("disabled");
+        if (historyPoiter.current === histories.current.length - 1) {
+          $prevButton.removeAttribute("disabled");
+          $nextButton.setAttribute("disabled", "");
+        } else if (historyPoiter.current === 0) {
+          $prevButton.setAttribute("disabled", "");
+          $nextButton.removeAttribute("disabled");
+        } else {
+          $prevButton.removeAttribute("disabled");
+          $nextButton.removeAttribute("disabled");
+        }
       }
     }
   }, [histories.current, historyCommand]);
@@ -272,11 +275,11 @@ export default function BoardComponent({
     if (isGameOver) {
       switch (object) {
         case "you": {
-          console.log("you win");
+          sendMessageInPlayerRoom(roomId, true, "You won!", "You lose!");
           break;
         }
         case "bot": {
-          sendMessageInBotRoom("You lose", false);
+          sendMessageInBotRoom("You lose!", false);
           break;
         }
       }

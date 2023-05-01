@@ -5,6 +5,7 @@ import { Board } from "../../entities/board/board";
 import { socket } from "../../service/socket/socket.service";
 import BoardComponent from "../board/board.component";
 import PlayerSettingsBarComponent from "../player-settings-bar/player-settings-bar.component";
+import { Redirect } from "../../service/redirect/redirect.service";
 
 export default function PlayerRoomComponent() {
   const params = new URL(location.href).searchParams;
@@ -40,6 +41,10 @@ export default function PlayerRoomComponent() {
 
       setSide(side);
       setReady(true);
+    });
+
+    socket.on("redirect", () => {
+      Redirect.toRoom();
     });
   }, []);
 

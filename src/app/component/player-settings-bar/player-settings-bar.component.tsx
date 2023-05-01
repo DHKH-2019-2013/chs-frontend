@@ -1,15 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { sendMessage } from "../../config/socket-client-config/socket-client-config";
 import { Redirect } from "../../service/redirect/redirect.service";
 import { socket } from "../../service/socket/socket.service";
 import { PlayerSettingsBarProps } from "./player-settings-bar.component.i";
 
-export function sendMessageInPlayerRoom(roomId: string, isYouSend: boolean, systemMessage?: string) {
+export function sendMessageInPlayerRoom(
+  roomId: string,
+  isYouSend: boolean,
+  systemMessage_1?: string,
+  systemMessage_2?: string
+) {
+  // systemMessage_1 is your received message
+  // systemMessage_2 is other received message
   const $incomingMessage = document.querySelector(
     "#player-settings-main-message-type input[type='text']"
   ) as HTMLInputElement;
 
-  let message = isYouSend ? $incomingMessage.value : systemMessage;
+  let message = systemMessage_1 || $incomingMessage.value;
   if (message.trim() === "") return;
 
   // create new bubble message
@@ -19,7 +26,7 @@ export function sendMessageInPlayerRoom(roomId: string, isYouSend: boolean, syst
 
   if (isYouSend) $div.classList.add("right");
   $newBubbleMessage.classList.add("bubble-message");
-  $newBubbleMessage.textContent = message;
+  $newBubbleMessage.innerHTML = message;
   $div.appendChild($newBubbleMessage);
   $bubbleMessageContainer.appendChild($div);
 
@@ -28,7 +35,7 @@ export function sendMessageInPlayerRoom(roomId: string, isYouSend: boolean, syst
   $messageContainer.scrollTop = $messageContainer.scrollHeight;
 
   // send message to other player
-  if (isYouSend) sendMessage(roomId, $incomingMessage.value);
+  if (isYouSend) sendMessage(roomId, systemMessage_2 || message);
 
   // clear input
   if (isYouSend) $incomingMessage.value = "";
@@ -38,6 +45,28 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
   useEffect(() => {
     socket.on("incoming-chat", ({ message }) => {
       sendMessageInPlayerRoom(roomId, false, message);
+    });
+
+    socket.on("surrendered", ({}) => {
+      sendMessageInPlayerRoom(roomId, false, "Your opponent surrendered!");
+
+      (document.querySelector("#board-container") as HTMLElement).style.cursor = "wait";
+      document.querySelectorAll(".chessman").forEach((e: any) => {
+        e.style.pointerEvents = "none";
+      });
+
+      sendMessageInPlayerRoom(roomId, false, "<a href=''>Click here to continue</a>");
+    });
+
+    socket.on("disconnected", ({}) => {
+      sendMessageInPlayerRoom(roomId, false, "Your opponent has left the game...");
+
+      (document.querySelector("#board-container") as HTMLElement).style.cursor = "wait";
+      document.querySelectorAll(".chessman").forEach((e: any) => {
+        e.style.pointerEvents = "none";
+      });
+
+      sendMessageInPlayerRoom(roomId, false, "<a href=''>Click here to continue</a>");
     });
   }, []);
 
@@ -52,10 +81,10 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
       elem.style.display = "none";
       (event.target as HTMLElement).classList.remove("active");
     });
-    const $button = document.querySelectorAll("#player-settings-tabs-container button")
+    const $button = document.querySelectorAll("#player-settings-tabs-container button");
     $button.forEach((elem: any) => {
-      elem.classList.remove("active")
-    })
+      elem.classList.remove("active");
+    });
 
     // set style to new one
     let displayStyle = "block";
@@ -74,13 +103,6 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
           className="active"
         >
           Main
-        </button>
-        <button
-          onClick={() => {
-            switchTab("player-settings-list");
-          }}
-        >
-          Players
         </button>
         <button
           onClick={() => {
@@ -109,13 +131,25 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
         </div>
       </div>
 
-      <div id="player-settings-list" className="player-settings-tab" style={{ display: "none" }}>
-        <li>dong</li>
-      </div>
-
       <div id="player-settings-action" className="player-settings-tab" style={{ display: "none" }}>
-        <li>Surrender</li>
-        <li onClick={Redirect.toRoom}>Leave</li>
+        <li
+          onClick={() => {
+            sendMessageInPlayerRoom(roomId, false, "You surrendered!");
+            switchTab("player-settings-main");
+            document.querySelector("#player-settings-tabs-container button").classList.add("active");
+            socket.emit("surrender");
+          }}
+        >
+          Surrender
+        </li>
+        <li
+          onClick={() => {
+            sendMessageInPlayerRoom(roomId, false, "empty");
+            Redirect.toRoom();
+          }}
+        >
+          Leave
+        </li>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ export default function LobbyComponent() {
 
   useEffect(() => {
     socket.emit("get-lobbies");
-  });
+  }, []);
 
   useEffect(() => {
     socket.on("return-lobbies", ({ roomsDB }) => {
@@ -59,7 +59,7 @@ export default function LobbyComponent() {
           </thead>
           <tbody>
             {roomsDB.map((room) => (
-              <tr>
+              <tr key={room.roomId}>
                 <td style={{ textAlign: "left" }}>{room.players[0].name}</td>
                 <td
                   style={{ textAlign: "center" }}
