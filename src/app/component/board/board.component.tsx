@@ -295,7 +295,7 @@ export default function BoardComponent({
     return board[currentPos]?.object?.move(
       board,
       currentPos,
-      histories.current.filter((history) => history.move).map((history) => history.move)
+      histories.current.filter((history) => history.move)
     );
   }
 
@@ -306,6 +306,10 @@ export default function BoardComponent({
     incomingHistory?: IncomingHistory,
     isSkip?: boolean
   ) {
+    // play sound
+    const audio = new Audio("assets/move_sound.m4a");
+    audio.play();
+
     // update chessman position by swapping
     board[nextPos].object = board[currentPos].object;
     if (promotionUnit) {

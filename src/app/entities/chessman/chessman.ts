@@ -1,3 +1,4 @@
+import { BoardHistories } from "../../component/board/board.component.i";
 import { Position } from "../board/board.i";
 import { ChessmanInfo } from "./chessman.i";
 
@@ -23,7 +24,7 @@ export class Chessman {
   public move(
     boardData: Record<string, Position>,
     currentPosition: string,
-    history?: Array<string>
+    histories?: BoardHistories
   ): Array<string> {
     return [];
   }
