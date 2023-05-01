@@ -18,4 +18,8 @@ export class Redirect {
   static toNewRoom(roomId: string, playerName: string) {
     location.href = `/player?roomId=${roomId}&name=${playerName}`;
   }
+
+  static reload() {
+    location.reload();
+  }
 }

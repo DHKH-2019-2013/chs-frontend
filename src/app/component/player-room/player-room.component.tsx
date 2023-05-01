@@ -46,6 +46,10 @@ export default function PlayerRoomComponent() {
     socket.on("redirect", () => {
       Redirect.toRoom();
     });
+
+    socket.on("reload", () => {
+      Redirect.reload();
+    });
   }, []);
 
   useEffect(() => {

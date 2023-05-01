@@ -8,7 +8,8 @@ export function sendMessageInPlayerRoom(
   roomId: string,
   isYouSend: boolean,
   systemMessage_1?: string,
-  systemMessage_2?: string
+  systemMessage_2?: string,
+  onRematch?: boolean
 ) {
   // systemMessage_1 is your received message
   // systemMessage_2 is other received message
@@ -28,6 +29,13 @@ export function sendMessageInPlayerRoom(
   $newBubbleMessage.classList.add("bubble-message");
   $newBubbleMessage.innerHTML = message;
   $div.appendChild($newBubbleMessage);
+
+  if (onRematch) {
+    $div.querySelector("a").addEventListener("click", () => {
+      socket.emit("agreed-rematch", { roomId });
+    });
+  }
+
   $bubbleMessageContainer.appendChild($div);
 
   // toggle scroll bar
@@ -49,13 +57,12 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
 
     socket.on("surrendered", ({}) => {
       sendMessageInPlayerRoom(roomId, false, "Your opponent surrendered!");
+      disableBoard();
+    });
 
-      (document.querySelector("#board-container") as HTMLElement).style.cursor = "wait";
-      document.querySelectorAll(".chessman").forEach((e: any) => {
-        e.style.pointerEvents = "none";
-      });
-
-      sendMessageInPlayerRoom(roomId, false, "<a href=''>Click here to continue</a>");
+    socket.on("rematched", ({}) => {
+      sendMessageInPlayerRoom(roomId, false, "Your opponent want a rematch!");
+      sendMessageInPlayerRoom(roomId, false, `<a href="#">Click here if you agree</a>`, undefined, true);
     });
 
     socket.on("disconnected", ({}) => {
@@ -69,6 +76,13 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
       sendMessageInPlayerRoom(roomId, false, "<a href=''>Click here to continue</a>");
     });
   }, []);
+
+  function disableBoard() {
+    (document.querySelector("#board-container") as HTMLElement).style.cursor = "wait";
+    document.querySelectorAll(".chessman").forEach((e: any) => {
+      e.style.pointerEvents = "none";
+    });
+  }
 
   function handleEnterMessage(event: any) {
     if (event.key === "Enter") sendMessageInPlayerRoom(roomId, true);
@@ -134,10 +148,21 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
       <div id="player-settings-action" className="player-settings-tab" style={{ display: "none" }}>
         <li
           onClick={() => {
+            sendMessageInPlayerRoom(roomId, false, "You want a rematch");
+            switchTab("player-settings-main");
+            document.querySelector("#player-settings-tabs-container button").classList.add("active");
+            socket.emit("rematch", { roomId });
+          }}
+        >
+          New match
+        </li>
+        <li
+          onClick={() => {
             sendMessageInPlayerRoom(roomId, false, "You surrendered!");
             switchTab("player-settings-main");
             document.querySelector("#player-settings-tabs-container button").classList.add("active");
-            socket.emit("surrender");
+            socket.emit("surrender", { roomId });
+            disableBoard();
           }}
         >
           Surrender
