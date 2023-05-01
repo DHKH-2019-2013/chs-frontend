@@ -54,3 +54,8 @@ export interface IncomingHistory {
   isCheckmate: boolean;
   isBotCheckmate: boolean;
 }
+
+export interface GetKingsPositionResult {
+  w_king: string;
+  b_king: string;
+}

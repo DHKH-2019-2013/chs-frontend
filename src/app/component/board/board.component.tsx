@@ -7,7 +7,7 @@ import {
 } from "../../config/http-rest-client-config/http-rest-client-config.i";
 import { HttpRestClientConfig } from "../../config/http-rest-client-config/http-rest-client.config";
 import { sendPlayerMove } from "../../config/socket-client-config/socket-client-config";
-import { CHESSMAN_ASSET_URL, GameMode, INTELIGENCE } from "../../constant/constant";
+import { CHESSMAN_ASSET_URL, GameMode, INITIAL_FEN, INTELIGENCE } from "../../constant/constant";
 import { Chessman } from "../../entities/chessman/chessman";
 import { socket } from "../../service/socket/socket.service";
 import { sendMessageInBotRoom } from "../bot-settings-bar/bot-settings-bar.component";
@@ -16,6 +16,7 @@ import {
   BoardHistories,
   BoardProps,
   CastlingResult,
+  GetKingsPositionResult,
   IncomingHistory,
   ListenUpdateMoveParams,
   PlayerMoveInfo,
@@ -41,7 +42,7 @@ export default function BoardComponent({
 }: BoardProps) {
   const histories = useRef<BoardHistories>([
     {
-      fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      fen: INITIAL_FEN,
       isCheckmate: false,
       isBotCheckmate: false,
       move: undefined,
@@ -209,7 +210,11 @@ export default function BoardComponent({
       const result: CheckValidMoveResponse = await HttpRestClientConfig.checkValidMove(params);
       if (!result.isValidMove) return;
 
-      updateBoardChessman(nextPos, nextPos, promotionUnit);
+      updateBoardChessman(nextPos, nextPos, promotionUnit, {
+        fen: result.fen,
+        isCheckmate: result.isCheckmate,
+        isBotCheckmate: false,
+      });
 
       setBoardFen(result.fen);
 
@@ -298,7 +303,8 @@ export default function BoardComponent({
     currentPos: string,
     nextPos: string,
     promotionUnit?: string,
-    incomingHistory?: IncomingHistory
+    incomingHistory?: IncomingHistory,
+    isSkip?: boolean
   ) {
     // update chessman position by swapping
     board[nextPos].object = board[currentPos].object;
@@ -333,7 +339,7 @@ export default function BoardComponent({
 
     if (currentPos !== nextPos) board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
 
-    setBoardHistory(incomingHistory, currentPos + nextPos);
+    !isSkip && setBoardHistory(incomingHistory, currentPos + nextPos);
   }
 
   async function moveChessmanByAnotherPlayer(anotherPlayerMove: ListenUpdateMoveParams) {
@@ -427,7 +433,7 @@ export default function BoardComponent({
       // handle promotion
       const _promotionResult: PromotionResult = isPromotion(currentPos, nextPos);
       if (_promotionResult.isPromotion) {
-        updateBoardChessman(currentPos, nextPos);
+        updateBoardChessman(currentPos, nextPos, undefined, undefined, true);
         setPromotionMovePositionInfo(`${currentPos} ${nextPos}`);
         displayPromotionBoard(true);
         forceUpdate();
@@ -502,6 +508,38 @@ export default function BoardComponent({
       },
     ];
     historyPoiter.current = histories.current.length - 1;
+  }
+
+  function getKingPostions(fen: string): GetKingsPositionResult {
+    let w_king;
+    let b_king;
+    const data = fen.split(" ")[0].split("/");
+    let currentRow = 8;
+    for (const fenRow of data) {
+      let currentColumn = 97; // equal 'a' in char code
+      for (let i = 0; i < fenRow.length; i++) {
+        switch (fenRow[i]) {
+          case "K": {
+            w_king = `${String.fromCharCode(currentColumn)}${currentRow}`;
+            break;
+          }
+          case "k": {
+            b_king = `${String.fromCharCode(currentColumn)}${currentRow}`;
+            break;
+          }
+        }
+
+        if (Boolean(Number(fenRow[i]))) {
+          currentColumn = currentColumn + Number(fenRow[i]);
+        } else currentColumn++;
+      }
+      currentRow--;
+    }
+
+    return {
+      w_king,
+      b_king,
+    };
   }
 
   // style functions
@@ -583,7 +621,9 @@ export default function BoardComponent({
           break;
         }
       }
-      (document.querySelector(`img[src='assets/${code}.png']`).parentNode as HTMLElement).classList.add(
+
+      const { w_king, b_king } = getKingPostions(fen);
+      (document.querySelector(`#${code === "K" ? w_king : b_king}`).parentNode as HTMLElement).classList.add(
         "is-check-mate"
       );
     } else {
