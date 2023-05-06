@@ -31,6 +31,7 @@ import { Pawn } from "../../entities/chessman/pawn/pawn";
 import { sendMessageInPlayerRoom } from "../player-settings-bar/player-settings-bar.component";
 
 export default function BoardComponent({
+  oldBoard,
   roomId,
   board,
   getBoardFen,
@@ -59,6 +60,12 @@ export default function BoardComponent({
       moveChessmanByAnotherPlayer({ fen, move, isCheckmate, promotionUnit });
     });
   }, []);
+
+  useEffect(() => {
+    if (oldBoard) {
+      toggleCheckmate(oldBoard.isCheckmate, oldBoard.isBotCheckmate);
+    }
+  });
 
   useEffect(() => {}, [side]);
 
@@ -511,6 +518,8 @@ export default function BoardComponent({
       },
     ];
     historyPoiter.current = histories.current.length - 1;
+
+    localStorage.setItem("bot-history", JSON.stringify(histories.current[histories.current.length - 1]));
   }
 
   function getKingPostions(fen: string): GetKingsPositionResult {

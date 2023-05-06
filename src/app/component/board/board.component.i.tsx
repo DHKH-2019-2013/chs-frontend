@@ -3,6 +3,7 @@ import { Position } from "../../entities/board/board.i";
 import { HistoryCommand } from "../bot-room/bot-room.component.i";
 
 export interface BoardProps {
+  oldBoard?: BoardHistory;
   roomId?: string;
   board: Record<string, Position>;
   getBoardFen: Function;
@@ -42,12 +43,14 @@ export interface ListenUpdateMoveParams {
   promotionUnit?: string;
 }
 
-export type BoardHistories = Array<{
+export type BoardHistory = {
   fen: string;
   isCheckmate: boolean;
   isBotCheckmate: boolean;
   move: string;
-}>;
+};
+
+export type BoardHistories = Array<BoardHistory>;
 
 export interface IncomingHistory {
   fen: string;

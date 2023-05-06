@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { GameMode } from "../../constant/constant";
+import { GameMode, INITIAL_FEN } from "../../constant/constant";
 import { Board } from "../../entities/board/board";
 import BoardComponent from "../board/board.component";
 import BotSettingsBarComponent from "../bot-settings-bar/bot-settings-bar.component";
 import { HistoryCommand } from "./bot-room.component.i";
+import { BoardHistory } from "../board/board.component.i";
 
 export default function BotRoomComponent() {
-  const board = useRef(new Board());
+  const oldBoard = JSON.parse(localStorage.getItem("bot-history")) as BoardHistory;
+  const board = useRef(new Board(oldBoard?.fen || INITIAL_FEN));
   const [historyCommand, setHistoryCommand] = useState<HistoryCommand>();
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function BotRoomComponent() {
   return (
     <div id="web-bot-room">
       <BoardComponent
+        oldBoard={oldBoard}
         board={board.current.getData()}
         getBoardFen={getBoardFen}
         setBoardFen={setBoardFen}

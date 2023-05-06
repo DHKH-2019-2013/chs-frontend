@@ -71,7 +71,13 @@ export default function BotSettingsBarComponent({ toggleChangeBoardHistory }: Bo
         >
           Next Move {">"}
         </button>
-        <button onClick={Redirect.toBotBoard}>New Game</button>
+        <button
+          onClick={() => {
+            Redirect.toBotBoard(true);
+          }}
+        >
+          New Game
+        </button>
       </div>
     </div>
   );

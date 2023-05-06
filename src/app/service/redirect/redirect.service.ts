@@ -11,7 +11,8 @@ export class Redirect {
     location.href = `/player?roomId=${roomId}&name=${name}`;
   }
 
-  static toBotBoard() {
+  static toBotBoard(onNewGame?: boolean) {
+    onNewGame && localStorage.removeItem("bot-history");
     location.href = "/bot";
   }
 
