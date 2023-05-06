@@ -43,10 +43,12 @@ export default function BoardComponent({
 }: BoardProps) {
   const histories = useRef<BoardHistories>([
     {
-      fen: INITIAL_FEN,
+      fen: oldBoard?.fen ?? INITIAL_FEN,
       isCheckmate: false,
       isBotCheckmate: false,
       move: undefined,
+      currentPos: undefined,
+      nextPos: undefined,
     },
   ]);
   const historyPoiter = useRef<number>(0);
@@ -64,8 +66,9 @@ export default function BoardComponent({
   useEffect(() => {
     if (oldBoard) {
       toggleCheckmate(oldBoard.isCheckmate, oldBoard.isBotCheckmate);
+      toggleMovedPoint(oldBoard.currentPos, oldBoard.nextPos);
     }
-  });
+  }, []);
 
   useEffect(() => {}, [side]);
 
@@ -84,7 +87,7 @@ export default function BoardComponent({
             break;
           }
           case GameMode.PVE: {
-            await moveChessmanByBot(playerMove);
+            await moveChessmanByBot();
             break;
           }
         }
@@ -103,7 +106,12 @@ export default function BoardComponent({
             histories.current[historyPoiter.current].isCheckmate,
             histories.current[historyPoiter.current].isBotCheckmate
           );
+          toggleMovedPoint(
+            histories.current[historyPoiter.current].currentPos,
+            histories.current[historyPoiter.current].nextPos
+          );
           sendMessageInBotRoom("move back", true);
+          localStorage.setItem("bot-history", JSON.stringify(histories.current[historyPoiter.current]));
           forceUpdate();
           break;
         }
@@ -112,7 +120,9 @@ export default function BoardComponent({
           historyPoiter.current + 1 < temp.length - 1 && (historyPoiter.current = historyPoiter.current + 1);
           reRenderBoard(temp[historyPoiter.current].fen);
           toggleCheckmate(temp[historyPoiter.current].isCheckmate, temp[historyPoiter.current].isBotCheckmate);
+          toggleMovedPoint(temp[historyPoiter.current].currentPos, temp[historyPoiter.current].nextPos);
           sendMessageInBotRoom("move next", true);
+          localStorage.setItem("bot-history", JSON.stringify(temp[historyPoiter.current]));
           forceUpdate();
           break;
         }
@@ -350,7 +360,7 @@ export default function BoardComponent({
 
     if (currentPos !== nextPos) board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
 
-    !isSkip && setBoardHistory(incomingHistory, currentPos + nextPos);
+    !isSkip && setBoardHistory(incomingHistory, currentPos, nextPos);
   }
 
   async function moveChessmanByAnotherPlayer(anotherPlayerMove: ListenUpdateMoveParams) {
@@ -381,11 +391,12 @@ export default function BoardComponent({
 
     // trigger board re-render
     forceUpdate();
+    toggleMovedPoint(currentPos, nextPos);
     toggleDisableMoveCursor(false);
     toggleCheckmate(anotherPlayerMove.isCheckmate);
   }
 
-  async function moveChessmanByBot(playerMove: PlayerMoveInfo) {
+  async function moveChessmanByBot() {
     const difficulty = (
       document.querySelector(
         "#bot-settings-bar #bot-settings-bar-difficulty #difficulty-list button.difficulty-active"
@@ -424,6 +435,7 @@ export default function BoardComponent({
     // trigger board re-render
     setBoardFen(response.fen);
     forceUpdate();
+    toggleMovedPoint(currentPos, nextPos);
     sendMessageInBotRoom(`bot move from ${currentPos} to ${nextPos}`, false);
     toggleDisableMoveCursor(false);
     toggleCheckmate(response.isCheckmate, true);
@@ -486,6 +498,7 @@ export default function BoardComponent({
       // disable player mouse cursor
       toggleDisableMoveCursor(true);
       toggleCheckmate(result.isCheckmate);
+      toggleMovedPoint(currentPos, nextPos);
 
       // update player move
       const playerMoveInfo: PlayerMoveInfo = {
@@ -507,14 +520,16 @@ export default function BoardComponent({
     }
   }
 
-  function setBoardHistory(incomingHistory: IncomingHistory, nextMove: string) {
+  function setBoardHistory(incomingHistory: IncomingHistory, currentPos: string, nextPos: string) {
     histories.current = [
       ...histories.current.slice(0, historyPoiter.current + 1),
       {
         fen: incomingHistory.fen,
         isCheckmate: incomingHistory.isCheckmate,
         isBotCheckmate: incomingHistory.isBotCheckmate,
-        move: nextMove,
+        move: currentPos + nextPos,
+        currentPos,
+        nextPos,
       },
     ];
     historyPoiter.current = histories.current.length - 1;
@@ -643,6 +658,18 @@ export default function BoardComponent({
         .querySelectorAll("img[src='assets/K.png'], img[src='assets/_k.png']")
         .forEach((king) => (king.parentNode as HTMLElement).classList.remove("is-check-mate"));
     }
+  }
+
+  function toggleMovedPoint(currentPos: string, nextPos: string) {
+    document.querySelectorAll(".moved-point").forEach((elem) => elem.classList.remove("moved-point"));
+
+    if (!currentPos && !nextPos) return;
+
+    const $currPos = document.querySelector(`#${currentPos}`).parentNode as HTMLElement;
+    const $nextPos = document.querySelector(`#${nextPos}`).parentNode as HTMLElement;
+
+    $currPos.classList.add("moved-point");
+    $nextPos.classList.add("moved-point");
   }
 
   return (

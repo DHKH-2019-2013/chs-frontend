@@ -31,6 +31,7 @@ export default function BotSettingsBarComponent({ toggleChangeBoardHistory }: Bo
           elem.classList.remove("difficulty-active");
         });
         elem.classList.add("difficulty-active");
+        sendMessageInBotRoom(`You change bot's difficulty to [${elem.textContent}]`, false);
       });
     });
   });

@@ -48,6 +48,8 @@ export type BoardHistory = {
   isCheckmate: boolean;
   isBotCheckmate: boolean;
   move: string;
+  currentPos: string;
+  nextPos: string;
 };
 
 export type BoardHistories = Array<BoardHistory>;
