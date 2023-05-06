@@ -1,7 +1,6 @@
 export interface GetBotMoveParams {
   fen: string;
-  move: string;
-  int: string;
+  elo: string;
 }
 
 export interface GetBotMoveResponse {

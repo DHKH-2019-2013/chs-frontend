@@ -11,7 +11,6 @@ export class HttpConfig {
   getConfig(): IHttpConfig {
     return {
       bridge: {
-        initializeChessBoard: `${this.appConfig.bridgeBaseUrl}/initialize-chess-board`,
         getMove: `${this.appConfig.bridgeBaseUrl}/move`,
         checkValidMove: `${this.appConfig.bridgeBaseUrl}/check-valid-move`,
       },

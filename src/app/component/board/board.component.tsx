@@ -386,8 +386,7 @@ export default function BoardComponent({
     ).getAttribute("data-intelligence");
     const params: GetBotMoveParams = {
       fen: getBoardFen(),
-      move: playerMove.move + (playerMove.promotionUnit ?? ""),
-      int: difficulty ?? String(INTELIGENCE),
+      elo: difficulty ?? String(INTELIGENCE),
     };
     const response: GetBotMoveResponse = await HttpRestClientConfig.getBotMove(params);
 

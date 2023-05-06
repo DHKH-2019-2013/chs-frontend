@@ -40,12 +40,12 @@ export default function BotSettingsBarComponent({ toggleChangeBoardHistory }: Bo
       <div id="bot-settings-bar-difficulty">
         <h3>Difficulty</h3>
         <div id="difficulty-list">
-          <button data-intelligence={2}>Easy</button>
-          <button data-intelligence={5} className="difficulty-active">
+          <button data-intelligence={1000}>Easy</button>
+          <button data-intelligence={1300} className="difficulty-active">
             Medium
           </button>
-          <button data-intelligence={10}>Hard</button>
-          <button data-intelligence={15}>Expert</button>
+          <button data-intelligence={1600}>Hard</button>
+          <button data-intelligence={2000}>Expert</button>
         </div>
       </div>
       <div id="bot-settings-bar-history">
