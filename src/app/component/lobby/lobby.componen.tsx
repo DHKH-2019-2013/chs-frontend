@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Redirect } from "../../service/redirect/redirect.service";
 import { socket } from "../../service/socket/socket.service";
 import { RoomDB } from "./lobby.componen.i";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse, faArrowsRotate, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function LobbyComponent() {
   const [roomsDB, setRoomsDB] = useState<RoomDB[]>([]);
@@ -29,7 +31,8 @@ export default function LobbyComponent() {
   }
 
   function getPlayerName(): string {
-    return (document.querySelector("input[type='text']") as HTMLInputElement).value;
+    const $name = document.querySelector("input[type='text']") as HTMLInputElement;
+    return $name?.value?.length !== 0 ? $name?.value : "player";
   }
 
   function createRoom() {
@@ -43,9 +46,18 @@ export default function LobbyComponent() {
       <div id="user-action">
         <div id="user-menu">
           <input type="text" defaultValue="player" placeholder="enter your ingame" />
-          <button onClick={Redirect.toRoom}>Refresh</button>
-          <button onClick={createRoom}>Create room</button>
-          <button onClick={Redirect.toHome}>Back to home screen</button>
+          <button onClick={Redirect.toRoom}>
+            <FontAwesomeIcon icon={faArrowsRotate} style={{ color: "#ffffff" }} />
+            Refresh
+          </button>
+          <button onClick={createRoom}>
+            <FontAwesomeIcon icon={faCirclePlus} />
+            Create room
+          </button>
+          <button onClick={Redirect.toHome}>
+            <FontAwesomeIcon icon={faHouse} style={{ color: "#ffffff" }} />
+            Back to home screen
+          </button>
         </div>
       </div>
       <div id="lobby-action">

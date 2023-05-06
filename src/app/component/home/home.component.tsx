@@ -11,9 +11,7 @@ export default function HomeComponent() {
         <div id="main-title">
           <h1>Play Chess Online</h1>
         </div>
-        <div id="current-player-title">
-          <p>1 Playing Now</p>
-        </div>
+        <div id="current-player-title"></div>
       </div>
       <div id="web-game-mode">
         <img onClick={Redirect.toRoom} src="assets/home_mode_player.png" />

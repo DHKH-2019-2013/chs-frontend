@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { sendMessage } from "../../config/socket-client-config/socket-client-config";
 import { Redirect } from "../../service/redirect/redirect.service";
 import { socket } from "../../service/socket/socket.service";
 import { PlayerSettingsBarProps } from "./player-settings-bar.component.i";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faReply } from "@fortawesome/free-solid-svg-icons";
 
 export function sendMessageInPlayerRoom(
   roomId: string,
@@ -135,13 +137,13 @@ export default function PlayerSettingsBarComponent({ roomId }: PlayerSettingsBar
         </div>
         <div id="player-settings-main-message-type">
           <input type="text" onKeyDown={handleEnterMessage} />
-          <input
-            type="button"
-            value="Send"
+          <button
             onClick={() => {
               sendMessageInPlayerRoom(roomId, true);
             }}
-          />
+          >
+            <FontAwesomeIcon icon={faReply} />
+          </button>
         </div>
       </div>
 

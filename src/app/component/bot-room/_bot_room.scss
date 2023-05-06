@@ -4,6 +4,7 @@ div#web-bot-room {
   grid-template-rows: auto;
   height: 100vh;
   grid-column-gap: 20px;
+  transform: scale(130%, 130%);
 
   div#board-container {
     position: relative;

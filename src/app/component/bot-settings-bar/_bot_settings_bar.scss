@@ -74,6 +74,15 @@ div#bot-settings-bar {
         background-color: gray;
         cursor: pointer;
       }
+
+      &.disabled {
+        cursor: not-allowed;
+      }
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 }

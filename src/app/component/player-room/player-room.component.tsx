@@ -14,10 +14,6 @@ export default function PlayerRoomComponent() {
   const [side, setSide] = useState(true);
 
   useEffect(() => {
-    document.getElementById("web-player-room").style.transform = `scale(${
-      document.querySelector("body").offsetWidth / 1600
-    })`;
-
     (document.querySelector("#board-container") as HTMLElement).style.cursor = "wait";
     document.querySelectorAll(".chessman").forEach((e: any) => {
       e.style.pointerEvents = "none";

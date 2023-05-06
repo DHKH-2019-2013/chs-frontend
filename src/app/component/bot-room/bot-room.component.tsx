@@ -12,12 +12,6 @@ export default function BotRoomComponent() {
   const [historyCommand, setHistoryCommand] = useState<HistoryCommand>();
 
   useEffect(() => {
-    document.getElementById("web-bot-room").style.transform = `scale(${
-      document.querySelector("body").offsetWidth / 1600
-    })`;
-  }, []);
-
-  useEffect(() => {
     setBoardFen(board.current.getFen());
   }, []);
 

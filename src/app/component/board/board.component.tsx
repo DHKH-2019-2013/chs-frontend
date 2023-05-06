@@ -438,6 +438,7 @@ export default function BoardComponent({
     toggleMovedPoint(currentPos, nextPos);
     sendMessageInBotRoom(`bot move from ${currentPos} to ${nextPos}`, false);
     toggleDisableMoveCursor(false);
+    toggleBotSettingBar(false);
     toggleCheckmate(response.isCheckmate, true);
     isGameOver(response.isGameOver, "bot");
   }
@@ -473,22 +474,40 @@ export default function BoardComponent({
       // handle castle
       const _castlingResult: CastlingResult = handleCastling(currentPos, nextPos);
       if (_castlingResult.isCastling) {
-        updateBoardChessman(_castlingResult.king.currentPos, _castlingResult.king.nextPos, undefined, {
-          fen: result.fen,
-          isCheckmate: result.isCheckmate,
-          isBotCheckmate: false,
-        });
-        updateBoardChessman(_castlingResult.rider.currentPos, _castlingResult.rider.nextPos, undefined, {
-          fen: result.fen,
-          isCheckmate: result.isCheckmate,
-          isBotCheckmate: false,
-        });
+        updateBoardChessman(
+          _castlingResult.king.currentPos,
+          _castlingResult.king.nextPos,
+          undefined,
+          {
+            fen: result.fen,
+            isCheckmate: result.isCheckmate,
+            isBotCheckmate: false,
+          },
+          gameMode === GameMode.PVE // should not store player history when play with bot
+        );
+        updateBoardChessman(
+          _castlingResult.rider.currentPos,
+          _castlingResult.rider.nextPos,
+          undefined,
+          {
+            fen: result.fen,
+            isCheckmate: result.isCheckmate,
+            isBotCheckmate: false,
+          },
+          gameMode === GameMode.PVE // should not store player history when play with bot
+        );
       } else
-        updateBoardChessman(currentPos, nextPos, undefined, {
-          fen: result.fen,
-          isCheckmate: result.isCheckmate,
-          isBotCheckmate: false,
-        });
+        updateBoardChessman(
+          currentPos,
+          nextPos,
+          undefined,
+          {
+            fen: result.fen,
+            isCheckmate: result.isCheckmate,
+            isBotCheckmate: false,
+          },
+          gameMode === GameMode.PVE // should not store player history when play with bot
+        );
 
       setBoardFen(result.fen);
       // final
@@ -499,6 +518,7 @@ export default function BoardComponent({
       toggleDisableMoveCursor(true);
       toggleCheckmate(result.isCheckmate);
       toggleMovedPoint(currentPos, nextPos);
+      gameMode === GameMode.PVE && toggleBotSettingBar(true);
 
       // update player move
       const playerMoveInfo: PlayerMoveInfo = {
@@ -670,6 +690,18 @@ export default function BoardComponent({
 
     $currPos.classList.add("moved-point");
     $nextPos.classList.add("moved-point");
+  }
+
+  function toggleBotSettingBar(isDisable: boolean) {
+    if (isDisable)
+      document.querySelectorAll("#bot-settings-bar-action button").forEach((elem) => {
+        elem.classList.add("disabled");
+      });
+    else {
+      document.querySelectorAll("#bot-settings-bar-action button").forEach((elem) => {
+        elem.classList.remove("disabled");
+      });
+    }
   }
 
   return (

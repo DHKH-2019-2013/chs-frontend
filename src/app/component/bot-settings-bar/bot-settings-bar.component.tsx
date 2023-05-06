@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Redirect } from "../../service/redirect/redirect.service";
 import { BotSettingsBarProps } from "./bot-settings-bar.component.i";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse, faBackward, faForward, faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 export function sendMessageInBotRoom(systemMessage: string, isYouSend: boolean) {
   systemMessage = systemMessage.trim();
@@ -55,14 +57,16 @@ export default function BotSettingsBarComponent({ toggleChangeBoardHistory }: Bo
         </div>
       </div>
       <div id="bot-settings-bar-action">
-        <button onClick={Redirect.toHome}>Back to home screen</button>
+        <button onClick={Redirect.toHome}>
+          <FontAwesomeIcon icon={faHouse} size="lg" />
+        </button>
         <button
           id="prev-move-button"
           onClick={() => {
             toggleChangeBoardHistory("prev");
           }}
         >
-          {"<"} Prev Move
+          <FontAwesomeIcon icon={faBackward} size="lg" />
         </button>
         <button
           id="next-move-button"
@@ -70,14 +74,14 @@ export default function BotSettingsBarComponent({ toggleChangeBoardHistory }: Bo
             toggleChangeBoardHistory("next");
           }}
         >
-          Next Move {">"}
+          <FontAwesomeIcon icon={faForward} size="lg" />
         </button>
         <button
           onClick={() => {
             Redirect.toBotBoard(true);
           }}
         >
-          New Game
+          <FontAwesomeIcon icon={faRotateRight} size="lg" />
         </button>
       </div>
     </div>

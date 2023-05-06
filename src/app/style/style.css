@@ -134,6 +134,7 @@ div#web-bot-room {
   grid-template-rows: auto;
   height: 100vh;
   grid-column-gap: 20px;
+  transform: scale(130%, 130%);
 }
 div#web-bot-room div#board-container {
   position: relative;
@@ -213,6 +214,13 @@ div#bot-settings-bar #bot-settings-bar-action button:hover {
   background-color: gray;
   cursor: pointer;
 }
+div#bot-settings-bar #bot-settings-bar-action button.disabled {
+  cursor: not-allowed;
+}
+div#bot-settings-bar #bot-settings-bar-action button img {
+  width: 20px;
+  height: 20px;
+}
 
 div#web-player-room {
   display: grid;
@@ -220,6 +228,7 @@ div#web-player-room {
   grid-template-rows: auto;
   height: 100vh;
   grid-column-gap: 20px;
+  transform: scale(130%, 130%);
 }
 div#web-player-room div#board-container {
   position: relative;
@@ -293,6 +302,10 @@ div#web-lobby div#user-action div#user-menu button {
 }
 div#web-lobby div#user-action div#user-menu button:hover {
   cursor: pointer;
+  opacity: 0.5;
+}
+div#web-lobby div#user-action div#user-menu button svg {
+  margin-right: 5px;
   opacity: 0.5;
 }
 div#web-lobby div#lobby-action {
@@ -395,12 +408,12 @@ div#player-settings-bar div#player-settings-main #player-settings-main-message-t
 div#player-settings-bar div#player-settings-main #player-settings-main-message-type input[type=text] {
   padding-left: 5px;
 }
-div#player-settings-bar div#player-settings-main #player-settings-main-message-type input[type=button] {
+div#player-settings-bar div#player-settings-main #player-settings-main-message-type button {
   width: 100%;
   padding: 10px 0px;
   border-radius: 5px;
 }
-div#player-settings-bar div#player-settings-main #player-settings-main-message-type input[type=button]:hover {
+div#player-settings-bar div#player-settings-main #player-settings-main-message-type button:hover {
   background-color: gray;
   cursor: pointer;
 }
