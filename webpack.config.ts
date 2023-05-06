@@ -41,7 +41,7 @@ module.exports = {
       directory: publicPath,
     },
     compress: true,
-    port: 9000,
+    port: 3000,
     historyApiFallback: true,
   },
 };

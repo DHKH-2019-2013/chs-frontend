@@ -674,9 +674,7 @@ export default function BoardComponent({
         "is-check-mate"
       );
     } else {
-      document
-        .querySelectorAll("img[src='assets/K.png'], img[src='assets/_k.png']")
-        .forEach((king) => (king.parentNode as HTMLElement).classList.remove("is-check-mate"));
+      document.querySelectorAll(".is-check-mate").forEach((king) => king.classList.remove("is-check-mate"));
     }
   }
 
