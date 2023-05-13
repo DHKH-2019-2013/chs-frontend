@@ -97,6 +97,7 @@ export default function BoardComponent({
 
   useEffect(() => {
     // when move, clear checkmate
+    console.log(histories.current);
     if (historyCommand) {
       switch (historyCommand.type) {
         case "prev": {
@@ -110,7 +111,6 @@ export default function BoardComponent({
             histories.current[historyPoiter.current].currentPos,
             histories.current[historyPoiter.current].nextPos
           );
-          sendMessageInBotRoom("move back", true);
           localStorage.setItem("bot-history", JSON.stringify(histories.current[historyPoiter.current]));
           forceUpdate();
           break;
@@ -121,7 +121,6 @@ export default function BoardComponent({
           reRenderBoard(temp[historyPoiter.current].fen);
           toggleCheckmate(temp[historyPoiter.current].isCheckmate, temp[historyPoiter.current].isBotCheckmate);
           toggleMovedPoint(temp[historyPoiter.current].currentPos, temp[historyPoiter.current].nextPos);
-          sendMessageInBotRoom("move next", true);
           localStorage.setItem("bot-history", JSON.stringify(temp[historyPoiter.current]));
           forceUpdate();
           break;
