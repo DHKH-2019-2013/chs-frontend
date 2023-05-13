@@ -243,7 +243,7 @@ div#web-player-room div#player-settings-bar {
   position: fixed;
   margin-left: -80px;
   width: 80px;
-  height: 400px;
+  height: 320px;
   background-color: rgba(255, 255, 255, 0.1);
   z-index: 3;
 }

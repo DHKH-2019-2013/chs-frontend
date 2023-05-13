@@ -459,6 +459,7 @@ export default function BoardComponent({
         updateBoardChessman(currentPos, nextPos, undefined, undefined, true);
         setPromotionMovePositionInfo(`${currentPos} ${nextPos}`);
         displayPromotionBoard(true);
+        toggleDisableMoveCursor(true);
         forceUpdate();
         return;
       }

@@ -27,10 +27,6 @@ export const WHITE_PROMOTION_CONTAINERS: ChessManContainer = [
     url: CHESSMAN_ASSET_URL.WHITE_QUEEN,
     code: "q",
   },
-  {
-    url: CHESSMAN_ASSET_URL.WHITE_PAWN,
-    code: "p",
-  },
 ];
 
 export const BLACK_PROMOTION_CONTAINERS: ChessManContainer = [
@@ -49,9 +45,5 @@ export const BLACK_PROMOTION_CONTAINERS: ChessManContainer = [
   {
     url: CHESSMAN_ASSET_URL.BLACK_QUEEN,
     code: "q",
-  },
-  {
-    url: CHESSMAN_ASSET_URL.BLACK_PAWN,
-    code: "p",
   },
 ];
