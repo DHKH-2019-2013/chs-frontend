@@ -60,8 +60,8 @@ export default function BoardComponent({
   useEffect(() => {
     socket.on(
       "listen-update-move",
-      ({ fen, move, isCheckmate, promotionUnit, enPassant: isEnPassant }: ListenUpdateMoveParams) => {
-        moveChessmanByAnotherPlayer({ fen, move, isCheckmate, promotionUnit, enPassant: isEnPassant });
+      ({ fen, move, isCheckmate, promotionUnit, enPassant }: ListenUpdateMoveParams) => {
+        moveChessmanByAnotherPlayer({ fen, move, isCheckmate, promotionUnit, enPassant });
       }
     );
   }, []);
@@ -379,7 +379,6 @@ export default function BoardComponent({
   }
 
   function updateBoardChessmanByEnPassant(code: string, nextPos: string) {
-    console.log(code, nextPos);
     if (code === "p") {
       board[nextPos[0] + "4"].object = new Chessman("assets/empty.png", undefined, undefined);
     } else if (code === "P") {
@@ -413,7 +412,8 @@ export default function BoardComponent({
         isBotCheckmate: false,
       });
 
-    if (anotherPlayerMove.enPassant.isEnPassant)
+    // handle en passent
+    if (anotherPlayerMove?.enPassant?.isEnPassant)
       updateBoardChessmanByEnPassant(anotherPlayerMove.enPassant.code, anotherPlayerMove.enPassant.nextPos);
 
     // trigger board re-render
@@ -488,6 +488,7 @@ export default function BoardComponent({
         setPromotionMovePositionInfo(`${currentPos} ${nextPos}`);
         displayPromotionBoard(true);
         toggleDisableMoveCursor(true);
+        toggleMovedPoint(currentPos, nextPos);
         forceUpdate();
         return;
       }
