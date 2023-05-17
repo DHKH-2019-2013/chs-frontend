@@ -34,6 +34,7 @@ export interface PlayerMoveInfo {
   move: string;
   isCheckmate: boolean;
   promotionUnit?: string;
+  enPassant?: IEnPassant;
 }
 
 export interface ListenUpdateMoveParams {
@@ -41,6 +42,7 @@ export interface ListenUpdateMoveParams {
   move: string;
   isCheckmate: boolean;
   promotionUnit?: string;
+  enPassant?: IEnPassant;
 }
 
 export type BoardHistory = {
@@ -63,4 +65,10 @@ export interface IncomingHistory {
 export interface GetKingsPositionResult {
   w_king: string;
   b_king: string;
+}
+
+export interface IEnPassant {
+  isEnPassant: boolean;
+  code: string;
+  nextPos: string;
 }

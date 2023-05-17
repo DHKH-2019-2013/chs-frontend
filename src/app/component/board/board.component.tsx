@@ -58,9 +58,12 @@ export default function BoardComponent({
   const [promotionMovePositionInfo, setPromotionMovePositionInfo] = useState("");
 
   useEffect(() => {
-    socket.on("listen-update-move", ({ fen, move, isCheckmate, promotionUnit }: ListenUpdateMoveParams) => {
-      moveChessmanByAnotherPlayer({ fen, move, isCheckmate, promotionUnit });
-    });
+    socket.on(
+      "listen-update-move",
+      ({ fen, move, isCheckmate, promotionUnit, enPassant: isEnPassant }: ListenUpdateMoveParams) => {
+        moveChessmanByAnotherPlayer({ fen, move, isCheckmate, promotionUnit, enPassant: isEnPassant });
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -82,7 +85,8 @@ export default function BoardComponent({
               getBoardFen(),
               playerMove.move,
               playerMove.isCheckmate,
-              playerMove.promotionUnit
+              playerMove.promotionUnit,
+              playerMove.enPassant
             );
             break;
           }
@@ -97,7 +101,6 @@ export default function BoardComponent({
 
   useEffect(() => {
     // when move, clear checkmate
-    console.log(histories.current);
     if (historyCommand) {
       switch (historyCommand.type) {
         case "prev": {
@@ -264,6 +267,19 @@ export default function BoardComponent({
     }
   }
 
+  function isEnPassant(currentPos: string, nextPos: string): boolean {
+    if (
+      ["p", "P"].includes(board[currentPos].object.get().code) &&
+      currentPos[1] !== nextPos[1] &&
+      ((nextPos[1] === "6" && board[nextPos[0] + "7"].object.get().code === "") ||
+        (nextPos[1] === "3" && board[nextPos[0] + "2"].object.get().code === ""))
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   function isPromotion(currentPos: string, nextPos: string): PromotionResult {
     const code = board[currentPos].object.get().code;
     if (code === "P" || code === "p") {
@@ -362,6 +378,15 @@ export default function BoardComponent({
     !isSkip && setBoardHistory(incomingHistory, currentPos, nextPos);
   }
 
+  function updateBoardChessmanByEnPassant(code: string, nextPos: string) {
+    console.log(code, nextPos);
+    if (code === "p") {
+      board[nextPos[0] + "4"].object = new Chessman("assets/empty.png", undefined, undefined);
+    } else if (code === "P") {
+      board[nextPos[0] + "5"].object = new Chessman("assets/empty.png", undefined, undefined);
+    }
+  }
+
   async function moveChessmanByAnotherPlayer(anotherPlayerMove: ListenUpdateMoveParams) {
     setBoardFen(anotherPlayerMove.fen);
 
@@ -387,6 +412,9 @@ export default function BoardComponent({
         isCheckmate: anotherPlayerMove.isCheckmate,
         isBotCheckmate: false,
       });
+
+    if (anotherPlayerMove.enPassant.isEnPassant)
+      updateBoardChessmanByEnPassant(anotherPlayerMove.enPassant.code, anotherPlayerMove.enPassant.nextPos);
 
     // trigger board re-render
     forceUpdate();
@@ -444,6 +472,7 @@ export default function BoardComponent({
 
   async function moveChessmanByPlayer(event: any, currentPos: string) {
     try {
+      let _isEnPassant = false;
       // get next chessman position
       const nextPos = document.elementFromPoint(event.clientX, event.clientY).id;
 
@@ -496,7 +525,9 @@ export default function BoardComponent({
           },
           gameMode === GameMode.PVE // should not store player history when play with bot
         );
-      } else
+      } else {
+        // handle en passant
+        _isEnPassant = isEnPassant(currentPos, nextPos);
         updateBoardChessman(
           currentPos,
           nextPos,
@@ -508,6 +539,10 @@ export default function BoardComponent({
           },
           gameMode === GameMode.PVE // should not store player history when play with bot
         );
+        if (_isEnPassant) {
+          updateBoardChessmanByEnPassant(board[nextPos].object.get().code, nextPos);
+        }
+      }
 
       setBoardFen(result.fen);
       // final
@@ -524,6 +559,11 @@ export default function BoardComponent({
       const playerMoveInfo: PlayerMoveInfo = {
         move: currentPos + nextPos,
         isCheckmate: result.isCheckmate,
+        enPassant: {
+          isEnPassant: _isEnPassant,
+          code: board[nextPos].object.get().code,
+          nextPos,
+        },
       };
       setPlayerMove(playerMoveInfo);
 
