@@ -280,32 +280,23 @@ export default function BoardComponent({
     }
   }
 
-  function isPromotion(currentPos: string, nextPos: string): PromotionResult {
+  function isPromotion(currentPos: string, nextPos: string, side: boolean): PromotionResult {
     const code = board[currentPos].object.get().code;
-    if (code === "P" || code === "p") {
-      switch (nextPos[1]) {
-        case "8": {
-          setPromotionSide(true);
-          return {
-            isPromotion: true,
-          };
-        }
-        case "1": {
-          setPromotionSide(false);
-          return {
-            isPromotion: true,
-          };
-        }
-        default: {
-          return {
-            isPromotion: false,
-          };
-        }
-      }
-    } else
+    if (side && code === "P" && nextPos[1] === "8") {
+      setPromotionSide(true);
+      return {
+        isPromotion: true,
+      };
+    } else if (!side && code === "p" && nextPos[1] === "1") {
+      setPromotionSide(false);
+      return {
+        isPromotion: true,
+      };
+    } else {
       return {
         isPromotion: false,
       };
+    }
   }
 
   function isGameOver(isGameOver: boolean, object: string) {
@@ -482,7 +473,7 @@ export default function BoardComponent({
       if (board[currentPos].object?.get().side !== side) throw new Error("Not your chessman");
 
       // handle promotion
-      const _promotionResult: PromotionResult = isPromotion(currentPos, nextPos);
+      const _promotionResult: PromotionResult = isPromotion(currentPos, nextPos, side);
       if (_promotionResult.isPromotion) {
         updateBoardChessman(currentPos, nextPos, undefined, undefined, true);
         setPromotionMovePositionInfo(`${currentPos} ${nextPos}`);
