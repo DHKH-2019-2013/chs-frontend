@@ -366,7 +366,7 @@ export default function BoardComponent({
 
     if (currentPos !== nextPos) board[currentPos].object = new Chessman("assets/empty.png", undefined, undefined);
 
-    !isSkip && setBoardHistory(incomingHistory, currentPos, nextPos);
+    !isSkip && gameMode === GameMode.PVE && setBoardHistory(incomingHistory, currentPos, nextPos);
   }
 
   function updateBoardChessmanByEnPassant(code: string, nextPos: string) {
